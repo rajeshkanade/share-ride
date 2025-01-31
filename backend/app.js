@@ -4,6 +4,7 @@ const express = require("express");
 const cors = require("cors");
 const connectToDb = require("./db/db");
 const app = express();
+const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser")
 
 const userRoutes = require("./routes/user.routes");
@@ -14,6 +15,7 @@ connectToDb();
 app.use(express.json());
 app.use(express.urlencoded({extended : true}));
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 app.get("/",(req,res)=>{  
     res.send("I am working ...");

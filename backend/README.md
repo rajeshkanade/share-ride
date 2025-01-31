@@ -194,3 +194,84 @@ The request body should be a JSON object with the following fields:
   "message": "Invalid email or password"
 }
 ```
+
+
+# User Profile
+
+## Endpoint
+`/users/profile`
+
+## Description
+`This endpoint is used to get the profile of the authenticated user.`
+
+## Method
+GET
+
+## Request Header
+Authorization: Bearer token (required)
+
+## Responses
+`Success`
+`Status Code: 200 OK`
+`Body: A JSON object containing the user profile information.`
+### Example:
+```json
+{
+  "_id": "user_id",
+  "fullname": {
+    "firstname": "John",
+    "lastname": "Doe"
+  },
+  "email": "john.doe@example.com",
+  "socketId": null
+}
+
+```
+
+## Authentication Error
+`Status Code`: 400 Unathorized
+`Body`: A JSON object containing an error message.
+`Example`:
+```json
+{
+  "message": "Authentication required"
+}
+
+```
+
+# User Logout 
+
+## Endpoint 
+`/users/logout`
+
+## Description 
+`This endpoint is used to log out the authenticated user.`
+
+## Method
+GET
+
+## Request Header
+Authorization: Bearer token (required)
+
+## Responses
+`Success`
+`Status Code: 200 OK`
+`Body: A JSON object containing the user profile information.`
+### Example:
+```json
+{
+  "message": "Logout successfully"
+}
+
+```
+
+## Authentication Error
+`Status Code`: 401 Unathorized
+`Body`: A JSON object containing an error message.
+`Example`:
+```json
+{
+  "message": "Unauthorized Access"
+}
+```
+
