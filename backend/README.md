@@ -275,3 +275,153 @@ Authorization: Bearer token (required)
 }
 ```
 
+<br>
+<br>
+
+# Captain Registration 
+
+## Endpoint
+
+`/captains/register`
+
+### Description
+This endpoint is used to register a new captain.
+
+### Method
+`POST`
+
+### Request Body
+The request body should be a JSON object with the following fields:
+- `fullname`: An object containing:
+  - `firstname`: A string with a minimum length of 3 characters (required)
+  - `lastname`: A string with a minimum length of 3 characters (optional)
+- `email`: A string representing a valid email address (required)
+- `password`: A string with a minimum length of 8 characters (required)
+- `vehicle`: An object containing:
+  - `color`: A string with a minimum length of 3 characters (required)
+  - `plate`: A string with a minimum length of 3 characters (required)
+  - `model`: A string with a minimum length of 3 characters (required)
+  - `type`: A string representing the type of vehicle (required, one of ["car", "motorcycle", "auto", "van"])
+  - `capacity`: An integer representing the capacity of the vehicle (required, minimum 1)
+- `location`: An object containing:
+  - `lat`: A number representing the latitude (optional)
+  - `long`: A number representing the longitude (optional)
+
+## Example: Request Body
+
+```json
+{
+  "fullname": {
+    "firstname": "John",
+    "lastname": "Doe"
+  },
+  "email": "john.doe@example.com",
+  "password": "password123",
+  "vehicle": {
+    "color": "red",
+    "plate": "ABC123",
+    "model": "Toyota",
+    "type": "car",
+    "capacity": 4
+  },
+  "location": {
+    "lat": 12.9716,
+    "long": 77.5946
+  }
+}
+```
+## Responses
+
+### Success
+- **Status Code**: `201 Created`
+- **Body**: A JSON object containing the generated token and captain information.
+
+Example:
+```json
+{
+  "token": "your_jwt_token",
+  "captain": {
+    "_id": "captain_id",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "vehicle": {
+      "color": "red",
+      "plate": "ABC123",
+      "model": "Toyota",
+      "type": "car",
+      "capacity": 4
+    },
+    "location": {
+      "lat": 12.9716,
+      "long": 77.5946
+    },
+    "status": "inactive",
+    "socketId": null
+  }
+}
+```
+
+### Validation Error
+- **Status Code**: 400 Bad Request
+- **Body**: A JSON object containing the validation errors.
+- **Example**:
+```json
+{
+  "errors": [
+    {
+      "msg": "First name must be at least 3 character long",
+      "param": "fullname.firstname",
+      "location": "body"
+    },
+    {
+      "msg": "Please provide a valid email address",
+      "param": "email",
+      "location": "body"
+    },
+    {
+      "msg": "Password must be at least 8 character long",
+      "param": "password",
+      "location": "body"
+    },
+    {
+      "msg": "Color must be at least 3 character long",
+      "param": "vehicle.color",
+      "location": "body"
+    },
+    {
+      "msg": "Plate must be at least 3 character long",
+      "param": "vehicle.plate",
+      "location": "body"
+    },
+    {
+      "msg": "Model must be at least 3 character long",
+      "param": "vehicle.model",
+      "location": "body"
+    },
+    {
+      "msg": "Capacity must be at least 1",
+      "param": "vehicle.capacity",
+      "location": "body"
+    },
+    {
+      "msg": "Invalid vehicle type",
+      "param": "vehicle.type",
+      "location": "body"
+    }
+  ]
+}
+
+```
+### Authentication Error
+- **Status Code**: `401 Unauthorized`
+- **Body**: A JSON object containing an error message.
+
+Example:
+```json
+{
+  "message": "User already exists"
+}
+```

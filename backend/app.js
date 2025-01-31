@@ -8,6 +8,7 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser")
 
 const userRoutes = require("./routes/user.routes");
+const captainRoutes = require("./routes/captain.routes");
 
 
 app.use(cors());
@@ -22,6 +23,7 @@ app.get("/",(req,res)=>{
 })
 
 app.use("/users",userRoutes);
+app.use("/captains",captainRoutes);
 
 
 module.exports = app;
