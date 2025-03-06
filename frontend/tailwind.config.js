@@ -17,6 +17,7 @@ export default {
         gray: {
           200: "#F8F9FA",
           300: "#E9ECEF",
+          400 : "#D1D4DB",
           500: "#6C757D",
           600: "#495057",
           700: "#212529",
@@ -35,6 +36,9 @@ export default {
           600: "#C82333",
           700: "#BD2130",
         },
+      },
+      width :{
+        '30' : '30%',
       },
       fontFamily: {
         heading: ["Poppins", "sans-serif"], // Font for headings
