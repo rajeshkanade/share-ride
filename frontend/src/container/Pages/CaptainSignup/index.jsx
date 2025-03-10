@@ -1,10 +1,84 @@
-import React from 'react'
+import React, { useState } from 'react'
+import LoginSignupHeader from '../../../components/LoginSignupHeader';
+import { LockKeyhole, Mail, ShieldCheck, User, UserCheck, UserPlus } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import PrimaryButton from '../../../components/PrimaryButton';
+import DontHaveAccount from '../../../components/DontOrHaveAccount';
+import InputField from '../../../components/InputField';
+import SecondaryButton from '../../../components/SecondaryButton';
+import DontOrHaveAccount from '../../../components/DontOrHaveAccount';
 
 const CaptainSignup = () => {
+   const [firstName , setFirstName] = useState("")
+    const [lastName , setLastName] = useState("")
+    const [username, setUsername] = useState('');
+    const [password , setPassword] = useState('');
+    const [confirmPassword , setConfirmPassword] = useState('');
+    const [userData , setUserData] = useState({});
+  
+    const formSubmit = (e) =>{
+      e.preventDefault();
+      // console.log(username, password);
+      setUserData({
+       fullName : {
+        firstName : firstName , 
+        lastName : lastName,
+       },
+        username : username , 
+        password : password ,
+        confirmPassword : confirmPassword ,
+      })
+      console.log(userData)
+      setUsername("")
+      setPassword("")
+      setFirstName("")
+      setLastName("")
+      setConfirmPassword("")
+    }
   return (
-    <div>
-      sign up
+    <>
+    <div className='min-h-screen w-full bg-gray-200 flex justify-center items-center'>
+      <div className='w-30 bg-white rounded'>
+          <LoginSignupHeader header={"Driver Register"} Icon={UserPlus} description={"Welcome, Register new Driver Account"}/>
+          <form className='w-full p-3 flex flex-col gap-3' onSubmit={(e)=>{
+            formSubmit(e);
+          }}>
+            <div className="flex w-full">
+              <div className='w-[50%] px-2'><InputField value={firstName} callback={setFirstName} type={"text"} label='First Name' Icon={User} required={true}/></div>
+              <div className='w-[50%]'><InputField value={lastName} callback={setLastName} type={"text"} label='Last Name' Icon={UserCheck} required={true}/></div>
+            </div>
+            <InputField value={username} callback={setUsername} type={"email"} label='Email' Icon={Mail} required={true}/>
+            <InputField value={password} callback={setPassword} type={"password"} label='Password' Icon={LockKeyhole}  required={true}/>
+            <InputField value={confirmPassword} callback={setConfirmPassword} type={"password"} label='Confirm Password' Icon={ShieldCheck}  required={true}/>
+            <div className='w-full'>
+            <h3 className="text-xl font-semibold mb-6 mt-5">Vehicle Information</h3>
+
+            <div className="flex w-full">
+              <div className='w-[50%] px-2'><InputField value={firstName} callback={setFirstName} type={"text"} label='Vehicle Color' Icon={User} required={true}/></div>
+              <div className='w-[50%]'><InputField value={lastName} callback={setLastName} type={"text"} label='License Plate' Icon={UserCheck} required={true}/></div>
+            </div>
+            <div className="flex w-full">
+              <div className='w-[50%] px-2'><InputField value={firstName} callback={setFirstName} type={"text"} label='Vehicle Model' Icon={User} required={true}/></div>
+              <div className='w-[50%]'><InputField value={lastName} callback={setLastName} type={"text"} label='License Type' Icon={UserCheck} required={true}/></div>
+            </div>
+          <div className="mb-8">
+          <InputField value={password} callback={setPassword} type={"number"} label='Seat Capacity' Icon={LockKeyhole}  required={true}/>
+            
+          </div>
+
+         
+            </div>
+            <PrimaryButton content={'Sign Up'}/>
+            
+
+
+          </form>
+          <DontOrHaveAccount content={"Have an Account ? "} link={'/captain-login'} heading={'Login here'}/>
+
+            <SecondaryButton content={'Sign Up as User'} link={'/signup'}/>
+      </div>
     </div>
+  </>
   )
 }
 
