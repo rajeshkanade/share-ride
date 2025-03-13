@@ -11,7 +11,8 @@ const inputField = ({label, type , Icon, required , value ,callback}) => {
     onChange={(e)=>{
       callback(e.target.value)
     }}
-    type={type} 
+    type={type}
+    required={required} 
     className='p-2 pl-10 border border-1 rounded border-gray-400 w-full focus:border-primary-500 focus:outline-none'  
     placeholder={`Enter your ${label}`
     }/> 

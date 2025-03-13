@@ -1,24 +1,50 @@
 import { Input } from 'postcss'
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import InputField from '../../../components/InputField'
 import { User, LockKeyhole, ShieldUser } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 import LoginSignupHeader from '../../../components/LoginSignupHeader'
 import PrimaryButton from '../../../components/PrimaryButton'
 import DontOrHaveAccount from '../../../components/DontOrHaveAccount'
 import SecondaryButton from '../../../components/SecondaryButton'
+import { UserDataContext } from '../../../context/UserContext'
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password , setPassword] = useState('');
-  const [userData , setUserData] = useState({});
+  // const [userData , setUserData] = useState({});
+  const {user,setUser} = useContext(UserDataContext);
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+  // useEffect(() => {
+  //   if(token){
+  //     navigate("/");
+  //   }
 
-  const formSubmit = (e) =>{
+  // }, [token])
+  
+  const formSubmit = async (e) =>{
     e.preventDefault();
     // console.log(username, password);
-    setUserData({
-      username : username , 
+    const userData = {
+      email : username , 
       password : password
-    })
+    }
+
+    try{
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`,userData);
+        if(response.status = 200){
+          const data = await response.data;
+          const token = await data.token;
+          setUser(data.user);
+          localStorage.setItem("token",token);
+          navigate('/');
+          console.log(data.user);
+        }
+    }catch(err){
+      console.log(err);
+    }
     setUsername("")
     setPassword("")
   }

@@ -1,6 +1,12 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import {Link} from 'react-router-dom';
+import { UserDataContext } from '../../context/UserContext';
+import Logout from '../Logout';
 const Navbar = () => {
+  const {user} = useContext(UserDataContext);
+  const token = localStorage.getItem("token");
+    console.log(user);
+    
   return (
     <>
     <header className="bg-white shadow-sm">
@@ -22,12 +28,14 @@ const Navbar = () => {
             <Link to="/contact" className="text-gray-600 hover:text-green-500">
               Contact
             </Link>
-            <Link to="/login" className="px-4 py-2 border border-green-500 text-green-500 rounded-md hover:bg-green-50">
+            {(!token) ? (<><Link to="/login" className="px-4 py-2 border border-green-500 text-green-500 rounded-md hover:bg-green-50">
               Login
             </Link>
             <Link to="/signup" className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">
               Sign Up
-            </Link>
+            </Link> </>) : <><h2 className='px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 text-2xl'>{user?.fullname.firstname}</h2>  <Link to={'/logout'} className="px-4 py-2 border border-green-500 text-green-500 rounded-md hover:bg-green-50">
+              logout
+    </Link> </>}
           </nav>
         </div>
       </header>

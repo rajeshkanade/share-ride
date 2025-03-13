@@ -14,7 +14,7 @@ const CaptainLogin = () => {
     const [data , setData] = useState({});
 
     // const [user,SetUser] = useContext(UserDataContext);
-    console.log(user);
+    // console.log(user);
   
     const formSubmit = (e) =>{
       e.preventDefault();

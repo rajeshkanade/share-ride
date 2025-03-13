@@ -4,14 +4,17 @@ import Router from './Router'
 import { BrowserRouter } from 'react-router-dom'
 import Home from './container/Pages/Home'
 import UserContext from './context/UserContext'
+import CaptainContext from './context/CaptainContext'
 const App = () => {
   return (
     <>
+    <CaptainContext>
     <UserContext>
     <BrowserRouter>
      <Router/>
     </BrowserRouter>
     </UserContext>
+    </CaptainContext>
     </>
   )
 }

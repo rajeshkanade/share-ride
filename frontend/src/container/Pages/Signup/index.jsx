@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import LoginSignupHeader from '../../../components/LoginSignupHeader';
 import { FolderPen, LockKeyhole, Mail, ShieldCheck, User, UserCheck, UserPlus } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -7,7 +7,9 @@ import DontHaveAccount from '../../../components/DontOrHaveAccount';
 import InputField from '../../../components/InputField';
 import SecondaryButton from '../../../components/SecondaryButton';
 import DontOrHaveAccount from '../../../components/DontOrHaveAccount';
-
+import axios from 'axios';
+import { UserDataContext } from '../../../context/UserContext';
+import { useNavigate } from 'react-router-dom';
 const Signup = () => {
   const [firstName , setFirstName] = useState("")
   const [lastName , setLastName] = useState("")
@@ -15,20 +17,44 @@ const Signup = () => {
   const [password , setPassword] = useState('');
   const [confirmPassword , setConfirmPassword] = useState('');
   const [userData , setUserData] = useState({});
+  const {user, setUser} = useContext(UserDataContext);
 
-  const formSubmit = (e) =>{
+  const navigate = useNavigate();
+
+  const formSubmit = async(e) =>{
     e.preventDefault();
     // console.log(username, password);
     setUserData({
-      fullName : {
-        firstName : firstName , 
-      lastName : lastName,
+      fullname : {
+        firstname : firstName , 
+        lastname : lastName,
       },
-      username : username , 
-      password : password ,
-      confirmPassword : confirmPassword ,
+      email : username , 
+      password : password,
     })
-    console.log(userData)
+
+    const newUser = {
+      fullname : {
+        firstname  : firstName,
+        lastname : lastName,
+      },
+      email : username,
+      password : password,
+    }
+
+    try{
+
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`,newUser);
+      if(response.status == 201){
+        const data  = response.data ;
+        setUser(data.user);
+        navigate("/");
+      }
+    }catch(error){
+      console.log(error);
+      
+    }
+    // console.log(userData)
     setUsername("")
     setPassword("")
     setFirstName("")
