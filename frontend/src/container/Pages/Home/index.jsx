@@ -2,36 +2,13 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '../../../components/Navbar'
 import Footer from '../../../components/Footer'
-<<<<<<< HEAD
+
 
 const Home = () => {
   return (
     <div className="min-h-screen bg-gray-100 font-sans">
       <Navbar/>
       
-=======
-import HomeTwo from '../../../components/HomeTwo'
-// import HomeThree from '../../../components/HomeThree'
-const Home = () => {
-  return (
-    <div className="min-h-screen bg-gray-100 font-sans">
-      <header className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center">
-            <div className="w-8 h-8 bg-green-500 rounded-full mr-2"></div>
-            <span className="text-xl font-bold text-green-500">ShareRide</span>
-          </div>
-          <nav className="flex items-center space-x-6">
-            <Link to="/about" className="text-gray-600 hover:text-green-500">About</Link>
-            <Link to="/how-to-use" className="text-gray-600 hover:text-green-500">How to Use</Link>
-            <Link to="/help" className="text-gray-600 hover:text-green-500">Help</Link>
-            <Link to="/contact" className="text-gray-600 hover:text-green-500">Contact</Link>
-            <Link to="/login" className="px-4 py-2 border border-green-500 text-green-500 rounded-md hover:bg-green-50">Login</Link>
-            <Link to="/signup" className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">Sign Up</Link>
-          </nav>
-        </div>
-      </header>
->>>>>>> 27e04985fee6e741ffd800026b71b5c16147a7ef
 
       <main className="container mx-auto px-4 py-12 flex">
         <div className="w-1/2 pr-12">
@@ -174,13 +151,10 @@ const Home = () => {
       <div className="w-[300px] h-[260px] bg-gray-300 rounded-lg hidden lg:block"></div>
       
     </div>
-<<<<<<< HEAD
     <Footer/>
-=======
       <Footer/>
->>>>>>> 27e04985fee6e741ffd800026b71b5c16147a7ef
     </div>
   )
 }
 
-export default Home
+export default Home;
