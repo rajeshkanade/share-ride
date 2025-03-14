@@ -9,6 +9,7 @@ import Ride from '../container/Pages/Ride'
 import UserProtectWrapper from '../ProtectedRouter/UserProtectWrapper'
 import Logout from '../components/Logout'
 import CaptainDashboard from "../container/Pages/DriverDashboard";
+import HowToUse from 'd:/HowToUse'
 const Router = () => {
   return (
     <>
@@ -23,6 +24,7 @@ const Router = () => {
         <Route path='/ride' element={<Ride/>}/>
         <Route path='/logout' element={<Logout/>}/>
         <Route path="/captain-home" element={<CaptainDashboard/>} />
+        <Route path="/how-to-use" element={<HowToUse/>}/>
     </Routes> 
     </>
   )
