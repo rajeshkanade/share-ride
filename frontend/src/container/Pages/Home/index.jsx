@@ -1,14 +1,37 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '../../../components/Navbar'
+<<<<<<< HEAD
 import Footer from '../../../components/Footer'
 
+=======
+import { LocateIcon, MapPinCheckInside } from 'lucide-react'
+>>>>>>> frontend
 
 const Home = () => {
+  const [pickup, setPickup] = useState('')
+  const [dropout, setDropout] = useState('')
+  const [isOpen, setIsOpen] = useState(false)
+  const openLocationRef = useRef(null)
+  console.log("isOpen : ",isOpen) ;
+  
+const locations = [
+  
+  "12 Block, Radhakrishna Building, Near Karve Complex, Pune",
+  "Flat 302, Shree Residency, Opposite Phoenix Mall, Viman Nagar, Pune",
+  "Shop 15, Sai Plaza, Near Swargate Bus Stand, Pune"
+
+]
+
+useEffect(()=>{
+
+},[isOpen])
+
+
   return (
     <div className="min-h-screen bg-gray-100 font-sans">
       <Navbar/>
-      
+
 
       <main className="container mx-auto px-4 py-12 flex">
         <div className="w-1/2 pr-12">
@@ -29,6 +52,7 @@ const Home = () => {
           </div>
 
           <div className="mb-8">
+<<<<<<< HEAD
             <div className="relative">
               <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -37,10 +61,104 @@ const Home = () => {
                 </svg>
               </span>
               <input type="text" placeholder="Enter pickup location" className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 text-lg" />
+=======
+            <div className="relative py-3">
+              <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-[#28A745]">
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                  ></path>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                  ></path>
+                </svg>
+              </span>
+              <input
+              value={pickup}
+              onChange={(e)=>[
+                setPickup(e.target.value)
+              ]}
+              onClick={()=>{
+                setIsOpen(true)
+              }}
+                type="text"
+                placeholder="Enter pickup location"
+                className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 text-lg"
+              />
+            </div>
+            <div className="relative py-3">
+              <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-[#28A745]">
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                  ></path>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                  ></path>
+                </svg>
+              </span>
+              <input
+                type="text"
+                value={dropout}
+              onChange={(e)=>[
+                setDropout(e.target.value)
+              ]}
+                onClick={()=>{
+                  setIsOpen(true);
+                }}
+                placeholder="Enter Dropped location"
+                className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 text-lg"
+              />
+>>>>>>> frontend
             </div>
           </div>
 
-          <div className="mb-8 flex items-center text-gray-600">
+          <div className="mb-8 flex relative items-center text-gray-600 z-10">
+           {
+            (isOpen) ?  <div ref={openLocationRef} className='bg-red absolute w-full bg-gray-100 top-[-35px] '>
+
+            {/* temporary locations  */}
+            {
+              locations.map((elem,idx)=>{
+                return <div key={idx} className="flex justify-start items-center gap-5  border border-1 p-4 hover:border-black rounded-lg cursor-pointer" onClick={()=>{setIsOpen(false)}}>
+                <div className='rounded-full flex justify-center items-center'>
+                <MapPinCheckInside color="#28A745" />
+                </div>
+                <div className='text-md font-semibold'>
+                  <h4>{elem}</h4>
+                </div>
+              </div>
+              })
+            }
+
+          
+         
+        </div> : ""
+           }
             <span className="w-4 h-4 bg-green-500 rounded-full mr-3"></span>
             <span className="text-lg">Use current location</span>
           </div>
