@@ -1,9 +1,11 @@
 "use client";
-import React from "react";
+import React, { useContext } from "react";
 import StatusIndicator from "../StatusIndicator";
 import ProfileSection from "../ProfileSection";
+import { CaptainDataContext } from "../../context/CaptainContext";
 
-function Header() {
+function CaptainHeader({captainName}) {
+  // console.log(captain);
   return (
     <header className="flex justify-between items-center px-6 w-full bg-green-100 shadow-sm h-[72px]">
       <div className="flex gap-6 items-center">
@@ -57,10 +59,10 @@ function Header() {
           </button>
         </nav>
         <div className="mx-6 w-px h-8 bg-zinc-200" aria-hidden="true" />
-        <ProfileSection />
+        <ProfileSection captainName={captainName}/>
       </div>
     </header>
   );
 }
 
-export default Header;
+export default CaptainHeader;

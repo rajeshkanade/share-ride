@@ -7,23 +7,42 @@ import PrimaryButton from '../../../components/PrimaryButton'
 import DontOrHaveAccount from '../../../components/DontOrHaveAccount'
 import SecondaryButton from '../../../components/SecondaryButton'
 import { UserDataContext } from '../../../context/UserContext'
+import axios from 'axios'
+import { CaptainDataContext } from '../../../context/CaptainContext'
+import { useNavigate } from 'react-router-dom'
 
 const CaptainLogin = () => {
    const [username, setUsername] = useState('');
     const [password , setPassword] = useState('');
     const [data , setData] = useState({});
+    const navigate = useNavigate();
+
+  const {captain, setCaptain} = useContext(CaptainDataContext);
 
     // const [user,SetUser] = useContext(UserDataContext);
     // console.log(user);
   
-    const formSubmit = (e) =>{
+    const formSubmit = async (e) =>{
       e.preventDefault();
       // console.log(username, password);
-      setData({
-        username : username , 
+      const captainData = {
+        email : username , 
         password : password
-      })
-      console.log(data)
+      }
+      try {
+        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/login`,captainData)
+        if(response.status == 200){
+          const data = response.data;
+          console.log(data);
+          setCaptain(data.captain);
+          const token = data.token;
+          localStorage.setItem("token",token);
+          navigate("/captain-home");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+      // console.log(data)
       setUsername("")
       setPassword("")
     }
