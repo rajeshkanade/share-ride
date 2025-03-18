@@ -1,12 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '../../../components/Navbar'
-<<<<<<< HEAD
 import Footer from '../../../components/Footer'
 
-=======
 import { LocateIcon, MapPinCheckInside } from 'lucide-react'
->>>>>>> frontend
 
 const Home = () => {
   const [pickup, setPickup] = useState('')
@@ -29,6 +26,7 @@ useEffect(()=>{
 
 
   return (
+    <>
     <div className="min-h-screen bg-gray-100 font-sans">
       <Navbar/>
 
@@ -52,16 +50,8 @@ useEffect(()=>{
           </div>
 
           <div className="mb-8">
-<<<<<<< HEAD
             <div className="relative">
-              <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                </svg>
-              </span>
-              <input type="text" placeholder="Enter pickup location" className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 text-lg" />
-=======
+              
             <div className="relative py-3">
               <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-[#28A745]">
                 <svg
@@ -133,7 +123,6 @@ useEffect(()=>{
                 placeholder="Enter Dropped location"
                 className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 text-lg"
               />
->>>>>>> frontend
             </div>
           </div>
 
@@ -172,7 +161,7 @@ useEffect(()=>{
             Find Route
           </button>
         </div>
-
+        </div>
         <div className="w-1/2 bg-gray-200 rounded-lg">
           {/* Placeholder for map or image */}
         </div>
@@ -270,8 +259,8 @@ useEffect(()=>{
       
     </div>
     <Footer/>
-      <Footer/>
     </div>
+    </>
   )
 }
 
