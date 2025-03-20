@@ -239,6 +239,7 @@ Authorization: Bearer token (required)
 
 ```
 
+
 # User Logout 
 
 ## Endpoint 
@@ -590,4 +591,248 @@ Example:
   "message": "Unauthorized access"
 }
 ```
-````
+
+# Rides
+
+## Create Ride
+
+### Endpoint
+
+`/rides/create`
+
+### Description
+This endpoint is used to create a new ride.
+
+### Method
+`POST`
+
+### Request Body
+The request body should be a JSON object with the following fields:
+- `pickup`: A string representing the pickup location (required, minimum length of 3 characters)
+- `destination`: A string representing the destination location (required, minimum length of 3 characters)
+- `vehicleType`: A string representing the type of vehicle (required, one of ["auto", "car", "motorcycle"])
+
+### Example: Request Body
+
+```json
+{
+  "pickup": "123 Main St",
+  "destination": "456 Elm St",
+  "vehicleType": "car"
+}
+```
+
+### Responses
+
+#### Success
+- **Status Code**: 201 Created
+- **Body**: A JSON object containing the ride information.
+
+Example:
+```json
+{
+  "user": "user_id",
+  "pickup": "123 Main St",
+  "destination": "456 Elm St",
+  "vehicleType": "car",
+  "status": "pending",
+  "fare": 100,
+  "duration": 30,
+  "distance": 10,
+  "rating": null,
+  "paymentId": null,
+  "orderId": null,
+  "signature": null,
+  "otp": "123456"
+}
+```
+
+#### Validation Error
+- **Status Code**: 400 Bad Request
+- **Body**: A JSON object containing the validation errors.
+
+Example:
+```json
+{
+  "errors": [
+    {
+      "msg": "Invalid Pickup Location",
+      "param": "pickup",
+      "location": "body"
+    },
+    {
+      "msg": "Invalid Destination Location",
+      "param": "destination",
+      "location": "body"
+    },
+    {
+      "msg": "Please Enter the valid Vehicle",
+      "param": "vehicleType",
+      "location": "body"
+    }
+  ]
+}
+```
+
+# Maps
+
+## Get Coordinates
+
+### Endpoint
+
+`/maps/get-coordinates`
+
+### Description
+This endpoint is used to get the coordinates of a given address.
+
+### Method
+`GET`
+
+### Query Parameters
+- `address`: A string representing the address (required, minimum length of 3 characters)
+
+### Example: Request
+
+`GET /maps/get-coordinates?address=123 Main St`
+
+### Responses
+
+#### Success
+- **Status Code**: 200 OK
+- **Body**: A JSON object containing the coordinates.
+
+Example:
+```json
+{
+  "lat": 12.9716,
+  "long": 77.5946
+}
+```
+
+#### Validation Error
+- **Status Code**: 400 Bad Request
+- **Body**: A JSON object containing the validation errors.
+
+Example:
+```json
+{
+  "errors": [
+    {
+      "msg": "Invalid address",
+      "param": "address",
+      "location": "query"
+    }
+  ]
+}
+```
+
+## Get Distance and Time
+
+### Endpoint
+
+`/maps/get-distance-time`
+
+### Description
+This endpoint is used to get the distance and time between two locations.
+
+### Method
+`GET`
+
+### Query Parameters
+- `origin`: A string representing the origin location (required, minimum length of 3 characters)
+- `destination`: A string representing the destination location (required, minimum length of 3 characters)
+
+### Example: Request
+
+`GET /maps/get-distance-time?origin=123 Main St&destination=456 Elm St`
+
+### Responses
+
+#### Success
+- **Status Code**: 200 OK
+- **Body**: A JSON object containing the distance and time.
+
+Example:
+```json
+{
+  "distance": 10,
+  "time": 30
+}
+```
+
+#### Validation Error
+- **Status Code**: 400 Bad Request
+- **Body**: A JSON object containing the validation errors.
+
+Example:
+```json
+{
+  "errors": [
+    {
+      "msg": "Invalid origin",
+      "param": "origin",
+      "location": "query"
+    },
+    {
+      "msg": "Invalid destination",
+      "param": "destination",
+      "location": "query"
+    }
+  ]
+}
+```
+
+## Get Suggestions
+
+### Endpoint
+
+`/maps/get-suggestions`
+
+### Description
+This endpoint is used to get address suggestions based on input.
+
+### Method
+`GET`
+
+### Query Parameters
+- `input`: A string representing the input for suggestions (required, minimum length of 3 characters)
+
+### Example: Request
+
+`GET /maps/get-suggestions?input=Main`
+
+### Responses
+
+#### Success
+- **Status Code**: 200 OK
+- **Body**: A JSON object containing the suggestions.
+
+Example:
+```json
+{
+  "suggestions": [
+    "123 Main St",
+    "456 Main St",
+    "789 Main St"
+  ]
+}
+```
+
+#### Validation Error
+- **Status Code**: 400 Bad Request
+- **Body**: A JSON object containing the validation errors.
+
+Example:
+```json
+{
+  "errors": [
+    {
+      "msg": "Invalid input",
+      "param": "input",
+      "location": "query"
+    }
+  ]
+}
+```
+
+
