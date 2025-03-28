@@ -1,7 +1,7 @@
 import React from "react";
 import FareSummary from "../FareSummary";
 
-function RideDetails() {
+function RideDetails({ride , captain}) {
   return (
     <section className="flex flex-col p-4 mt-6 w-full bg-gray-50 rounded-xl max-md:mr-0.5 max-md:max-w-full">
       <h3 className="self-start text-base font-semibold text-neutral-800">
@@ -30,20 +30,10 @@ function RideDetails() {
             28 min
           </span>
         </div>
-        <div className="flex flex-col items-center pt-3 pr-6 pl-3 bg-white rounded-lg h-[122px] w-[122px] max-md:pr-5">
-          <img
-            src="https://cdn.builder.io/api/v1/image/assets/46d113f96a5b4b3b8b0fa1d110ef3ac5/a13d306f7c652a0765cc3d29a78be80861bd32f88da4474b5b06b22bea2636e7?placeholderIfAbsent=true"
-            className="object-contain w-5 aspect-square"
-            alt="Vehicle type icon"
-          />
-          <span className="mt-2 text-xs text-gray-500">Type</span>
-          <span className="z-10 mt-2 text-base font-medium leading-6 text-neutral-800">
-            Premium Sedan
-          </span>
-        </div>
+       
       </div>
 
-      <FareSummary />
+      <FareSummary fare={ride?.fare}/>
     </section>
   );
 }

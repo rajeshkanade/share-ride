@@ -39,7 +39,7 @@ const Login = () => {
           const token = await data.token;
           setUser(data.user);
           localStorage.setItem("token",token);
-          navigate('/');
+          navigate('/ride');
           console.log(data.user);
         }
     }catch(err){

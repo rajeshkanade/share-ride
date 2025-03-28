@@ -11,8 +11,9 @@ function ActionButtons() {
 
   console.log(currentPath)
 
-  const handleAccept = () => {
+  const handleAccept = (e) => {
     // Handle accept action
+    e.preventDefault();
     console.log("Ride accepted");
   };
 

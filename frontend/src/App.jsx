@@ -5,16 +5,23 @@ import { BrowserRouter } from 'react-router-dom'
 import Home from './container/Pages/Home'
 import UserContext from './context/UserContext'
 import CaptainContext from './context/CaptainContext'
+import SocketContext from './context/SocketContext'
+import RideContext from './context/RideContext'
+
 const App = () => {
   return (
     <>
-    <CaptainContext>
-    <UserContext>
-    <BrowserRouter>
-     <Router/>
-    </BrowserRouter>
-    </UserContext>
-    </CaptainContext>
+    <SocketContext>
+      <RideContext>
+      <CaptainContext>
+        <UserContext>
+          <BrowserRouter>
+            <Router/>
+          </BrowserRouter>
+        </UserContext>
+      </CaptainContext>
+      </RideContext>
+    </SocketContext>
     </>
   )
 }

@@ -7,20 +7,51 @@ import WeeklySummarySection from "../../../components/WeeklySummarySection";
 import { CaptainDataContext } from "../../../context/CaptainContext";
 import RideRequestCard from "../../../components/RideRequestCard";
 import { Car, X } from "lucide-react";
-
+import { SocketDataContext } from "../../../context/SocketContext";
+import { RideDataContext } from "../../../context/RideContext";
 
 function CaptainDashboard() {
   const {captain} = useContext(CaptainDataContext);
   const [captainData, setCaptainData] = useState({})
   const [openRequestPanel, setOpenRequestPanel] = useState(false)
+  const {socket , sendMessage, receiveMessage} = useContext(SocketDataContext);
+  // const [ride, setRide] = useState(null);
 
-  console.log("catpain " ,captain);
-  console.log("catpain Data :  " ,captainData);
+  const {ride , setRide} = useContext(RideDataContext);
   useEffect(() => {
       setCaptainData(captain);
+      sendMessage("join", {userType : "captain" , userId : captain._id})
+    console.log("captain is : ",captain);
 
+    const updateLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          const { latitude, longitude } = position.coords;
+          sendMessage("update-location-captain", {
+            userId: captain._id,
+            location: { 
+              ltd : latitude,
+              lng  : longitude,
+            },
+          });
+        });
+      }
+    };
+    updateLocation();
+
+    // const intervalId = setInterval(updateLocation, 10000);
+
+    // return () => clearInterval(intervalId);
   }, [captainData])
   
+  useEffect(() => {
+    receiveMessage("new-ride", (data) => {
+      console.log("New ride request received: ", data);
+      // Handle the new ride request here
+      setRide(data);
+      setOpenRequestPanel(true); // Open the request panel when a new ride request is received
+    });
+  }, [socket]);
   
    return (
     <main className="flex flex-col bg-gray-50 min-h-screen relative">
@@ -38,7 +69,7 @@ function CaptainDashboard() {
             } onClick={()=>{setOpenRequestPanel(false)}}>
             <X color="#28A745" />
             </div>
-            <RideRequestCard/>
+            <RideRequestCard captain={captainData}  ride={ride}/>
           </div> : ""
           }
         <GoOnlineCard />

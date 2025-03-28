@@ -1,24 +1,50 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
-function ActionButtons({setConfirmButtonPanel}) {
+import CaptainDataContext from "../../context/CaptainContext";
+function ActionButtons({setConfirmButtonPanel , ride ,captain}) {
     // const [confirmButtonPanel, setConfirmButtonPanel] = useState(false)
+    //  const {captain} = useContext(CaptainDataContext);
+   const [captainData, setCaptainData] = useState({})
+
     const currentPath = window.location.pathname;
+    console.log("ride from action buttons : ",ride);
+    console.log("captain from action buttons : ",captain);
+    console.log("captaindata from action buttons : ",captainData);
+    useEffect(()=>{
+      if (captain) {
+        setCaptainData(captain);
+      }
+
+      
+    },[ride,captain])
   const handleDecline = () => {
     // Handle decline action
     console.log("Ride declined");
-  };
+  }; 
 
   console.log(currentPath)
 
-  const handleAccept = () => {
-    setConfirmButtonPanel(true);
-    console.log("Ride accepted");
+  const handleAccept =async () => {
+    if (captain) {
+      setConfirmButtonPanel(true);
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/confirm`, {
+        rideId: ride?._id,
+        captain: captain,
+      },
+      {
+        headers: {
+          Authorization: `bearer ${localStorage.getItem("token")}`
+        }
+      });
+      if (response.status === 200) {
+        console.log("Ride accepted");
+      }
+    } else {
+      console.log("Captain is undefined");
+    }
   };
-  useEffect(()=>{
-    
-  },[])
   return (
     <div className="flex gap-4 mt-6 text-sm font-medium text-center w-full justify-center items-center max-md:max-w-full">
       <button
@@ -26,7 +52,7 @@ function ActionButtons({setConfirmButtonPanel}) {
         className="px-16 py-3.5 text-red-500 whitespace-nowrap bg-gray-50 rounded-lg max-md:px-5"
       >
         Decline
-      </button>
+      </button >
       {
         (currentPath == "/captain-assignment") ? <button
         onClick={handleAccept}

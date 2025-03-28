@@ -1,13 +1,21 @@
 "use client";
-import React from "react";
+import React, { useContext } from "react";
 import CaptainStatusBar from "../../../components/CaptainStatusBar";
 import RideRequestCard from "../../../components/RideRequestCard";
 import MapView from "../../../components/MapView";
 import RideDetails from "../../../components/RideDetails";
 import Ride from "../Ride";
 import Footer from "../../../components/Footer"
-
+import { RideDataContext } from "../../../context/RideContext";
+import { CaptainDataContext } from "../../../context/CaptainContext";
 function CaptainRideAssignment() {
+  const {ride} = useContext(RideDataContext);
+  const {captain} = useContext(CaptainDataContext);
+  const getDistanceAndTime = () =>{
+
+  }
+  console.log("rides from ass : ",ride )
+
   return (
     <main className="overflow-hidden  bg-white min-h-screen">
       <section className="w-full bg-gray-50 max-md:max-w-full">
@@ -15,7 +23,7 @@ function CaptainRideAssignment() {
         <div className="max-md:max-w-full w-full">
           <div className="flex w-full max-md:flex-col">
             <div className="w-[35%] max-md:ml-0 max-md:w-full">
-              <RideRequestCard  RideDetails={RideDetails}/>
+              <RideRequestCard captain={captain} ride={ride}   RideDetails={RideDetails}/>
             </div>
             <div className=" w-[65%] max-md:ml-0 max-md:w-full">
               <MapView />

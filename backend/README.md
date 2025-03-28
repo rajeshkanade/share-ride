@@ -1,7 +1,7 @@
 # API Documentation
 
-
-# User Registration 
+# Users
+## User Registration 
 
 ## Endpoint
 
@@ -113,7 +113,7 @@ The error response body should be a JSON object with the following fields:
 ```
 
 
-# User Login
+## User Login
 
 ## Endpoint
 `/users/login`
@@ -196,7 +196,7 @@ The request body should be a JSON object with the following fields:
 ```
 
 
-# User Profile
+## User Profile
 
 ## Endpoint
 `/users/profile`
@@ -240,7 +240,7 @@ Authorization: Bearer token (required)
 ```
 
 
-# User Logout 
+## User Logout 
 
 ## Endpoint 
 `/users/logout`
@@ -279,9 +279,10 @@ Authorization: Bearer token (required)
 <br>
 <br>
 
-# Captain Registration 
+# Captains
+## Captain Registration 
 
-## Endpoint
+### Endpoint
 
 `/captains/register`
 
@@ -308,7 +309,7 @@ The request body should be a JSON object with the following fields:
   - `lat`: A number representing the latitude (optional)
   - `long`: A number representing the longitude (optional)
 
-## Example: Request Body
+### Example: Request Body
 
 ```json
 {
@@ -331,7 +332,7 @@ The request body should be a JSON object with the following fields:
   }
 }
 ```
-## Responses
+### Responses
 
 ### Success
 - **Status Code**: `201 Created`
@@ -427,7 +428,7 @@ Example:
 }
 ```
 
-# Captain Login
+## Captain Login
 
 ## Endpoint
 `/captains/login`
@@ -496,7 +497,7 @@ Example:
 }
 ```
 
-# Captain Profile
+## Captain Profile
 
 ## Endpoint
 `/captains/profile`
@@ -554,7 +555,7 @@ Example:
 }
 ```
 
-# Captain Logout
+## Captain Logout
 
 ## Endpoint
 `/captains/logout`
@@ -592,87 +593,7 @@ Example:
 }
 ```
 
-# Rides
 
-## Create Ride
-
-### Endpoint
-
-`/rides/create`
-
-### Description
-This endpoint is used to create a new ride.
-
-### Method
-`POST`
-
-### Request Body
-The request body should be a JSON object with the following fields:
-- `pickup`: A string representing the pickup location (required, minimum length of 3 characters)
-- `destination`: A string representing the destination location (required, minimum length of 3 characters)
-- `vehicleType`: A string representing the type of vehicle (required, one of ["auto", "car", "motorcycle"])
-
-### Example: Request Body
-
-```json
-{
-  "pickup": "123 Main St",
-  "destination": "456 Elm St",
-  "vehicleType": "car"
-}
-```
-
-### Responses
-
-#### Success
-- **Status Code**: 201 Created
-- **Body**: A JSON object containing the ride information.
-
-Example:
-```json
-{
-  "user": "user_id",
-  "pickup": "123 Main St",
-  "destination": "456 Elm St",
-  "vehicleType": "car",
-  "status": "pending",
-  "fare": 100,
-  "duration": 30,
-  "distance": 10,
-  "rating": null,
-  "paymentId": null,
-  "orderId": null,
-  "signature": null,
-  "otp": "123456"
-}
-```
-
-#### Validation Error
-- **Status Code**: 400 Bad Request
-- **Body**: A JSON object containing the validation errors.
-
-Example:
-```json
-{
-  "errors": [
-    {
-      "msg": "Invalid Pickup Location",
-      "param": "pickup",
-      "location": "body"
-    },
-    {
-      "msg": "Invalid Destination Location",
-      "param": "destination",
-      "location": "body"
-    },
-    {
-      "msg": "Please Enter the valid Vehicle",
-      "param": "vehicleType",
-      "location": "body"
-    }
-  ]
-}
-```
 
 # Maps
 
@@ -836,3 +757,143 @@ Example:
 ```
 
 
+
+
+
+# Rides
+
+## Create Ride
+
+### Endpoint
+
+`/rides/create`
+
+### Description
+This endpoint is used to create a new ride.
+
+### Method
+`POST`
+
+### Request Body
+The request body should be a JSON object with the following fields:
+- `pickup`: A string representing the pickup location (required, minimum length of 3 characters)
+- `destination`: A string representing the destination location (required, minimum length of 3 characters)
+- `vehicleType`: A string representing the type of vehicle (required, one of ["auto", "car", "motorcycle"])
+
+### Example: Request Body
+
+```json
+{
+  "pickup": "123 Main St",
+  "destination": "456 Elm St",
+  "vehicleType": "car"
+}
+```
+
+### Responses
+
+#### Success
+- **Status Code**: 201 Created
+- **Body**: A JSON object containing the ride information.
+
+Example:
+```json
+{
+  "user": "user_id",
+  "pickup": "123 Main St",
+  "destination": "456 Elm St",
+  "vehicleType": "car",
+  "status": "pending",
+  "fare": 100,
+  "duration": 30,
+  "distance": 10,
+  "rating": null,
+  "paymentId": null,
+  "orderId": null,
+  "signature": null,
+  "otp": "123456"
+}
+```
+
+#### Validation Error
+- **Status Code**: 400 Bad Request
+- **Body**: A JSON object containing the validation errors.
+
+Example:
+```json
+{
+  "errors": [
+    {
+      "msg": "Invalid Pickup Location",
+      "param": "pickup",
+      "location": "body"
+    },
+    {
+      "msg": "Invalid Destination Location",
+      "param": "destination",
+      "location": "body"
+    },
+    {
+      "msg": "Please Enter the valid Vehicle",
+      "param": "vehicleType",
+      "location": "body"
+    }
+  ]
+}
+```
+## Get Fare
+
+### Endpoint
+
+`/rides/get-fare`
+
+### Description
+This endpoint is used to get the fare for a ride between two locations.
+
+### Method
+`GET`
+
+### Query Parameters
+- `pickup`: A string representing the pickup location (required, minimum length of 3 characters)
+- `destination`: A string representing the destination location (required, minimum length of 3 characters)
+
+### Example: Request
+
+`GET /rides/get-fare?pickup=123 Main St&destination=456 Elm St`
+
+### Responses
+
+#### Success
+- **Status Code**: 200 OK
+- **Body**: A JSON object containing the fare information.
+
+Example:
+```json
+{
+  "fare": 100,
+  "duration": 30,
+  "distance": 10
+}
+```
+
+#### Validation Error
+- **Status Code**: 400 Bad Request
+- **Body**: A JSON object containing the validation errors.
+
+Example:
+```json
+{
+  "errors": [
+    {
+      "msg": "Invalid Pickup Location",
+      "param": "pickup",
+      "location": "query"
+    },
+    {
+      "msg": "Invalid Destination Location",
+      "param": "destination",
+      "location": "query"
+    }
+  ]
+}
+```

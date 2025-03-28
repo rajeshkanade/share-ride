@@ -11,14 +11,22 @@ import Logout from '../../components/Logout'
 import CaptainDashboard from "../Pages/CaptainDashboard";
 import CaptainProtectWrapper from '../../ProtectedRouter/CaptainProtectWrapper'
 import CaptainRideAssignment from '../Pages/CaptainRideAssignment'
+import OnboardingSlider from '../../components/OnboardingSlider'
+import ContactUs from '../../components/ContactUs'
+import HowToUse from '../Pages/HowToUse'
+import AboutUs from '../Pages/AboutUs'
 const Router = () => {
   return (
     <>
      <Routes>
-        <Route path='/' element={<UserProtectWrapper>
-          <Home/>
-        </UserProtectWrapper>}/>
+        <Route path='/' element={<OnboardingSlider/>}/>
+        <Route path='/home' element={<Home/>}/>
         <Route path='/login' element={<Login/>}/>
+        <Route path='/signup' element={<Signup/>}/>
+        <Route path='/contact' element={<ContactUs/>}/>
+        <Route path='/how-to-use' element={<HowToUse></HowToUse>}/>
+        <Route path='/about' element={<AboutUs></AboutUs>}/>
+
         <Route path='/signup' element={<Signup/>}/>
         <Route path='/captain-login' element={<CaptainLogin/>}/>
         <Route path='/captain-signup' element={<CaptainSignup/>}/>

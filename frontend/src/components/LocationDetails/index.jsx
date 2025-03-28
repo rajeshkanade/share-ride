@@ -1,6 +1,6 @@
 import React from "react";
 
-function LocationDetails() {
+function LocationDetails({pickup,destination}) {
   return (
     <section className="flex gap-3 self-start mt-6">
       <div className="flex flex-col self-start mt-1 text-xs text-white whitespace-nowrap">
@@ -14,7 +14,7 @@ function LocationDetails() {
       </div>
       <div className="flex flex-col grow shrink-0 items-start text-sm text-gray-500 basis-0 w-fit">
         <h4 className="font-medium text-neutral-800">Pickup Location</h4>
-        <p className="mt-1">Central Mall, 123 Shopping Avenue</p>
+        <p className="mt-1">{pickup}</p>
         <div className="flex gap-2 px-3 py-2 mt-2 bg-gray-50 rounded-lg">
           <img
             src="https://cdn.builder.io/api/v1/image/assets/46d113f96a5b4b3b8b0fa1d110ef3ac5/30b5c01c48dda2727df2f2352d9a522be39ff2ca3b75ae78d4397f16a19691f0?placeholderIfAbsent=true"
@@ -27,7 +27,7 @@ function LocationDetails() {
           Dropoff Location
         </h4>
         <p className="self-stretch mt-1">
-          Airport Terminal 3, International Departures
+          {destination}
         </p>
       </div>
     </section>

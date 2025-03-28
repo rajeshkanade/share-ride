@@ -9,7 +9,7 @@ const Navbar = () => {
     
   return (
     <>
-    <header className="bg-white shadow-sm">
+    <header className="bg-white  border-gray-300 border-b">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center">
             <div className="w-8 h-8 bg-green-500 rounded-full mr-2"></div>

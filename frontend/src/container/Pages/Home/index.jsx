@@ -1,35 +1,86 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Navbar from '../../../components/Navbar'
 import Footer from '../../../components/Footer'
+// import mapImage from "../../../assets/images/map.png"
+import mapImg from "../../../assets/map.png"
 
 import { LocateIcon, MapPinCheckInside } from 'lucide-react'
+import ContactUs from '../../../components/ContactUs'
+import LoginToSeeActivity from '../../../components/LoginToSeeActivity'
+import axios from 'axios'
 
 const Home = () => {
   const [pickup, setPickup] = useState('')
   const [dropout, setDropout] = useState('')
   const [isOpen, setIsOpen] = useState(false)
+  const [suggestions, setSuggestions] = useState([])
+  const [activeInput, setActiveInput] = useState(null)
   const openLocationRef = useRef(null)
+  const navigate = useNavigate();
   console.log("isOpen : ",isOpen) ;
+  const token = localStorage.getItem("token");
   
-const locations = [
+  const fetchSuggestions = async (input) => {
+    try {
+      const token = localStorage.getItem('token') // Assuming the token is stored in localStorage
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/maps/get-suggestions?input=${input}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      setSuggestions(response.data || [])
+    } catch (error) {
+      console.error("Error fetching suggestions:", error)
+      setSuggestions([])
+    }
+  }
+
+  useEffect(() => {
+    if (pickup.length >= 3) {
+      fetchSuggestions(pickup)
+    }
+  }, [pickup])
+
+  useEffect(() => {
+    if (dropout.length >= 3) {
+      fetchSuggestions(dropout)
+    }
+  }, [dropout])
+
+
+  const openRidePage = () =>{
+    if(pickup && dropout){
+      localStorage.setItem("pickup", pickup);
+    localStorage.setItem("destination",dropout);
+    if(token){
+      navigate("/ride");
+    }else{
+      navigate("/login");
+    }
+    }
+    else{
+      console.log("Please enter pickup and drop location")
+    }
+
+  }
   
-  "12 Block, Radhakrishna Building, Near Karve Complex, Pune",
-  "Flat 302, Shree Residency, Opposite Phoenix Mall, Viman Nagar, Pune",
-  "Shop 15, Sai Plaza, Near Swargate Bus Stand, Pune"
 
-]
+  // useEffect(()=>{},[suggestions])
 
-useEffect(()=>{
-
-},[isOpen])
-
+  const handleSuggestionClick = (suggestion) => {
+    if (activeInput === 'pickup') {
+      setPickup(suggestion.description)
+    } else if (activeInput === 'dropout') {
+      setDropout(suggestion.description)
+    }
+    setIsOpen(false)
+  }
 
   return (
     <>
     <div className="min-h-screen bg-gray-100 font-sans">
       <Navbar/>
-
 
       <main className="container mx-auto px-4 py-12 flex">
         <div className="w-1/2 pr-12">
@@ -82,6 +133,7 @@ useEffect(()=>{
               ]}
               onClick={()=>{
                 setIsOpen(true)
+                setActiveInput('pickup')
               }}
                 type="text"
                 placeholder="Enter pickup location"
@@ -118,7 +170,8 @@ useEffect(()=>{
                 setDropout(e.target.value)
               ]}
                 onClick={()=>{
-                  setIsOpen(true);
+                  setIsOpen(true)
+                  setActiveInput('dropout')
                 }}
                 placeholder="Enter Dropped location"
                 className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-green-500 text-lg"
@@ -132,13 +185,13 @@ useEffect(()=>{
 
             {/* temporary locations  */}
             {
-              locations.map((elem,idx)=>{
-                return <div key={idx} className="flex justify-start items-center gap-5  border border-1 p-4 hover:border-black rounded-lg cursor-pointer" onClick={()=>{setIsOpen(false)}}>
+              suggestions?.map((elem,idx)=>{
+                return <div key={idx} className="flex justify-start items-center gap-5  border border-1 p-4 hover:border-black rounded-lg cursor-pointer" onClick={()=>handleSuggestionClick(elem)}>
                 <div className='rounded-full flex justify-center items-center'>
                 <MapPinCheckInside color="#28A745" />
                 </div>
-                <div className='text-md font-semibold'>
-                  <h4>{elem}</h4>
+                <div className='text-md font-semibold' >
+                  <h4>{elem.description}</h4>
                 </div>
               </div>
               })
@@ -152,7 +205,9 @@ useEffect(()=>{
             <span className="text-lg">Use current location</span>
           </div>
 
-          <button className="w-full flex items-center justify-center px-6 py-3 bg-green-500 text-white rounded-full text-lg font-semibold hover:bg-green-600">
+          <button className="w-full flex items-center justify-center px-6 py-3 bg-green-500 text-white rounded-full text-lg font-semibold hover:bg-green-600" 
+          onClick={openRidePage}
+          >
             <span className="mr-2">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"></path>
@@ -163,101 +218,13 @@ useEffect(()=>{
         </div>
         </div>
         <div className="w-1/2 bg-gray-200 rounded-lg">
-          {/* Placeholder for map or image */}
+          <img width="100%" height="100%" src={mapImg} alt="" />
         </div>
       </main>
 
-
-      <main className="container mx-auto px-4 py-8">
-      <section className="mb-12">
-        <h2 className="text-2xl font-bold text-center mb-8">Our Services</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <div className="text-3xl mb-4">🚲</div>
-            <h3 className="font-semibold mb-2">Bike</h3>
-            <p className="text-gray-600">Quick and affordable rides for solo travelers</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <div className="text-3xl mb-4">💚</div>
-            <h3 className="font-semibold mb-2">Auto</h3>
-            <p className="text-gray-600">Convenient three-wheeler rides</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <div className="text-3xl mb-4">🚗</div>
-            <h3 className="font-semibold mb-2">Auto Share</h3>
-            <p className="text-gray-600">Share your auto ride, save more</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <div className="text-3xl mb-4">🚕</div>
-            <h3 className="font-semibold mb-2">Cab Economy</h3>
-            <p className="text-gray-600">Affordable car rides for comfort</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <div className="text-3xl mb-4">👥</div>
-            <h3 className="font-semibold mb-2">Cab Economy Share</h3>
-            <p className="text-gray-600">Share your ride, split the fare</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <div className="text-3xl mb-4">👤</div>
-            <h3 className="font-semibold mb-2">Cab Premium</h3>
-            <p className="text-gray-600">Luxury rides for special occasions</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <div className="text-3xl mb-4">🚘</div>
-            <h3 className="font-semibold mb-2">Cab Premium Share</h3>
-            <p className="text-gray-600">Share luxury rides at better rates</p>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <div className="text-3xl mb-4">🛡️</div>
-            <h3 className="font-semibold mb-2">Outstation</h3>
-            <p className="text-gray-600">Long distance travel made comfortable</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Add more sections as needed */}
-    </main>
-
-    <div className="w-full max-w-[1400px] mx-auto bg-white shadow-lg rounded-xl p-8 flex flex-col lg:flex-row items-center justify-between gap-6">
-      
-      {/* Left Section */}
-      <div className="flex-1 w-full">
-        <h2 className="text-2xl font-bold">Log in to see your recent activity</h2>
-        <p className="text-gray-600 mt-1 text-base">
-          View past trips, tailored suggestions, support resources, and more.
-        </p>
-
-        {/* Feature Boxes */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
-          <div className="bg-green-50 p-4 rounded-lg flex flex-col items-center text-center">
-            <span className="text-green-600 text-2xl">⏳</span>
-            <p className="font-semibold text-sm mt-2">Access History</p>
-          </div>
-          <div className="bg-green-50 p-4 rounded-lg flex flex-col items-center text-center">
-            <span className="text-green-600 text-2xl">⚙️</span>
-            <p className="font-semibold text-sm mt-2">Get Personalized</p>
-          </div>
-          <div className="bg-green-50 p-4 rounded-lg flex flex-col items-center text-center">
-            <span className="text-green-600 text-2xl">🏷</span>
-            <p className="font-semibold text-sm mt-2">Discover Offers</p>
-          </div>
-        </div>
-
-        {/* Login Button & Sign-Up (Same Line) */}
-        <div className="flex flex-col sm:flex-row items-center gap-4 mt-4">
-          <button className="bg-green-500 text-white py-3 px-6 rounded-lg text-base hover:bg-green-600 transition">
-            Log in to your account
-          </button>
-          <p className="text-gray-600 text-sm">
-            Don't have an account? <a href="#" className="text-green-600 font-semibold">Sign up</a>
-          </p>
-        </div>
-      </div>
-
-      {/* Right Section (Image Placeholder) */}
-      <div className="w-[300px] h-[260px] bg-gray-300 rounded-lg hidden lg:block"></div>
-      
-    </div>
+      <ContactUs/>
+      <LoginToSeeActivity/>
+   
     <Footer/>
     </div>
     </>

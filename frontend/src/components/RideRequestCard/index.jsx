@@ -7,15 +7,19 @@ import FareSummary from "../FareSummary";
 import ConfirmActionButtons from "../ConfirmActionsButtons"
 import ActionButtons from "../ActionButtons";
 
-function RideRequestCard({RideDetails}) {
+function RideRequestCard({RideDetails ,ride , captain}) {
     const [confirmButtonPanel,setConfirmButtonPanel] = useState(false);
+    // const [rideData, setRideData] = useState()
     console.log("confirmButtonPanel : ",confirmButtonPanel);
     const ConfirmPanelFun = (data) =>{
         setConfirmButtonPanel(data);
     }
+    // console.log("ride data : ", rideData)
+    console.log(" ride : ", ride)
     useEffect(()=>{
-        
-    },[confirmButtonPanel])
+        // setRideData(ride);
+
+    },[confirmButtonPanel,ride,captain])
   return (
     <article className="flex flex-col p-6 mx-auto w-full bg-white max-md:px-5 max-md:max-w-full">
       <div className="flex gap-5 justify-between w-full text-sm max-md:max-w-full">
@@ -29,15 +33,15 @@ function RideRequestCard({RideDetails}) {
       <div className="w-full">
        
       {
-        (confirmButtonPanel) ? <> <input type="text" className="w-full px-5 py-4 mt-2 rounded-xl font-mono border border-green-400 focus:border-green-700 focus:outline-none " placeholder="Enter OTP"/><ConfirmActionButtons/> </>  : <ActionButtons setConfirmButtonPanel={ConfirmPanelFun} />
+        (confirmButtonPanel) ? <><form ><input type="text" className="w-full px-5 py-4 mt-2 rounded-xl font-mono border border-green-400 focus:border-green-700 focus:outline-none " placeholder="Enter OTP"/><ConfirmActionButtons/> </form> </>  : <ActionButtons captain={captain} ride={ride} setConfirmButtonPanel={ConfirmPanelFun} />
       }
       </div>
-      <PassengerInfo />
-      <LocationDetails />
+      <PassengerInfo user={ride?.user} />
+      <LocationDetails pickup={ride?.pickup} destination={ride?.destination} />
       {/* {RideDetails} */}
         {
             (RideDetails) ? 
-      <RideDetails/>
+      <RideDetails captain={captain} ride={ride}/>
       : ""
     }
     </article>

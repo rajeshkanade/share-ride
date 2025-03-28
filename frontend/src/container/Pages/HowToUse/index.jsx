@@ -1,11 +1,15 @@
 "use client"
 
 import { useState } from "react"
+import Navbar from "../../../components/Navbar"
+import Footer from "../../../components/Footer"
 
 function HowToUse() {
   const [activeTab, setActiveTab] = useState("passengers")
 
   return (
+   <>
+   <Navbar/>
     <div className="min-h-screen bg-white py-12 font-sans">
     <div className="container mx-auto px-4 max-w-4xl">
       <h1 className="text-3xl font-semibold text-center text-gray-800 mb-2">How to Use ShareRide</h1>
@@ -271,6 +275,8 @@ function HowToUse() {
       </div>
     </div>
   </div>
+  <Footer/>
+   </>
   )
 }
 

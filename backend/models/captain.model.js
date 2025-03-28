@@ -1,4 +1,3 @@
-const { populate } = require("dotenv");
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -15,63 +14,64 @@ const captainSchema = new mongoose.Schema({
             minLength : [3, "Lastname must be at least 3 characters long"]
         },
     },
-        email : {
+    email : {
+        type : String,
+        unique : true,
+        require : true,
+        lowercase : true ,
+        match : [/.+\@.+\..+/, "Please fill a valid email address"]
+    },
+    password : {
+        type : String,
+        require : true,
+        minLength : [8, "Password must be at least 8 characters long"]
+    },
+    socketId : {
+        type : String
+    },
+    status : {
+        type : String,
+        enum : ["active", "inactive"],
+        default : "inactive"
+    },
+    vehicle : {
+        color : {
             type : String,
-            unique : true,
             require : true,
-            lowercase : true ,
-            match : [/.+\@.+\..+/, "Please fill a valid email address"]
+            minLength : [3, "Color must be at least 3 characters long"]
         },
-        password : {
+        plate : {
             type : String,
             require : true,
-            minLength : [8, "Password must be at least 8 characters long"]
+            minLength : [3, "Plate must be at least 3 characters long"]
         },
-        socketId : {
-            type : String
-        },
-        status : {
+        model : {
             type : String,
-            enum : ["active", "inactive"],
-            default : "inactive"
+            require : true,
+            minLength : [3, "Model must be at least 3 characters long"]
         },
-        vehicle : {
-            color : {
-                type : String,
-                require : true,
-                minLength : [3, "Color must be at least 3 characters long"]
-            },
-            plate : {
-                type : String,
-                require : true,
-                minLength : [3, "Plate must be at least 3 characters long"]
-            },
-            model : {
-                type : String,
-                require : true,
-                minLength : [3, "Model must be at least 3 characters long"]
-            },
-            capacity  : {
-                type : Number,
-                require : true,
-                min : [1, "Capacity must be at least 1"]
-            },
-            type : {
-                type : String,
-                require : true,
-                enum : ["car", "motorcycle", "auto", "van"]
-            }
-
+        capacity  : {
+            type : Number,
+            require : true,
+            min : [1, "Capacity must be at least 1"]
         },
-        location : {
-          lat : {
-                type : Number,
-          },
-          lon : {
-                type : Number,
-          }
-
+        type : {
+            type : String,
+            require : true,
+            enum : ["car", "motorcycle", "auto", "van"]
         }
+    },
+    location: {
+        type: {
+            type: String,
+            enum: ["Point"],
+            // required: true
+        },
+        coordinates: {
+            type: [Number], // [longitude, latitude]
+            // required: true
+        }
+    }
 })
 
 
@@ -89,6 +89,8 @@ captainSchema.methods.comparePassword = async function(password){
 captainSchema.statics.hashPassword = async function(password){
     return await bcrypt.hash(password, 10);
 }
+
+captainSchema.index({ location: "2dsphere" });
 const captainModel = mongoose.model("captain", captainSchema);
 
 module.exports = captainModel;
