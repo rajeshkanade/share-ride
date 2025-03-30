@@ -6,9 +6,11 @@ import RideDetails from "../RideDetails";
 import FareSummary from "../FareSummary";
 import ConfirmActionButtons from "../ConfirmActionsButtons"
 import ActionButtons from "../ActionButtons";
+import axios from 'axios';
 
-function RideRequestCard({RideDetails ,ride , captain}) {
+function RideRequestCard({RideDetails ,ride , captain , setRideStartCard , setRideData}) {
     const [confirmButtonPanel,setConfirmButtonPanel] = useState(false);
+    const [otp,setOtp] = useState("");
     // const [rideData, setRideData] = useState()
     console.log("confirmButtonPanel : ",confirmButtonPanel);
     const ConfirmPanelFun = (data) =>{
@@ -20,8 +22,37 @@ function RideRequestCard({RideDetails ,ride , captain}) {
         // setRideData(ride);
 
     },[confirmButtonPanel,ride,captain])
+
+    const handleSubmit = async(e) => {
+          e.preventDefault();
+          console.log("hello")
+          setRideStartCard(true);
+        console.log("token from storage (HS): ", localStorage.getItem("token"));
+      
+          try {
+            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/start-ride`, {
+          
+           params : { rideId: ride._id,
+                otp: otp},
+              headers : {
+                Authorization : `bearer ${localStorage.getItem("token")}`
+              }
+              ,
+            }
+            );
+            if (response.status === 200) {
+              console.log("Response from server: ", response.data);
+              setRideData(response.data);
+            }
+          } catch (error) {
+            console.error("Error while starting the ride: ", error.response ? error.response.data : error.message);
+          }
+      
+          console.log("OTP submitted");
+      }
+ 
   return (
-    <article className="flex flex-col p-6 mx-auto w-full bg-white max-md:px-5 max-md:max-w-full">
+    <article className="flex flex-col p-6 mx-auto w-full bg-white rounded-2xl max-md:px-5 max-md:max-w-full">
       <div className="flex gap-5 justify-between w-full text-sm max-md:max-w-full">
         <div className="flex gap-2 font-medium text-yellow-400">
           <div className="flex shrink-0 my-auto w-2 h-2 bg-yellow-400 rounded-[26843500px]" />
@@ -33,7 +64,18 @@ function RideRequestCard({RideDetails ,ride , captain}) {
       <div className="w-full">
        
       {
-        (confirmButtonPanel) ? <><form ><input type="text" className="w-full px-5 py-4 mt-2 rounded-xl font-mono border border-green-400 focus:border-green-700 focus:outline-none " placeholder="Enter OTP"/><ConfirmActionButtons/> </form> </>  : <ActionButtons captain={captain} ride={ride} setConfirmButtonPanel={ConfirmPanelFun} />
+        (confirmButtonPanel) ? <>
+        <form onSubmit={handleSubmit}>
+          <input 
+          value={otp} 
+          onChange={(e)=>{setOtp(e.target.value)}} 
+          type="number" 
+          className="w-full px-5 py-4 mt-2 rounded-xl font-mono border border-green-400 focus:border-green-700 focus:outline-none " 
+          placeholder="Enter OTP"
+          />
+          <ConfirmActionButtons/>
+           </form>
+            </>  : <ActionButtons captain={captain} ride={ride} setConfirmButtonPanel={ConfirmPanelFun} />
       }
       </div>
       <PassengerInfo user={ride?.user} />

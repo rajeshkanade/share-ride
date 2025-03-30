@@ -46,6 +46,7 @@ module.exports.getFare = async(req,res) =>{
         return res.status(400).json({ errors: errors.array() });
     }
     const { pickup, destination } = req.query;
+    // console.log("Pickup and Destination: ", pickup, destination);
     try {
         const fare = await rideService.calculateFare(pickup, destination);
         return res.status(200).json(fare);
@@ -86,6 +87,8 @@ module.exports.startRide = async(req,res) =>{
     try{
         const ride = await rideService.startRide({rideId , otp , captain : req.captain});
         console.log("start ride from controller : ", ride);
+        
+        
         return res.status(200).json(ride);
     }catch(err){
         return res.status(500).json({message : err.message});

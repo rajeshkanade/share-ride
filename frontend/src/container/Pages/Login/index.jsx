@@ -74,6 +74,8 @@ const Login = () => {
               <SecondaryButton content={'Login as Driver'} link={'/captain-login'}/>
         </div>
       </div>
+
+    
     </>
   )
 }

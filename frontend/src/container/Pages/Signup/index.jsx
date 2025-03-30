@@ -90,6 +90,7 @@ const Signup = () => {
               <SecondaryButton content={'Sign Up as Driver'} link={'/captain-signup'}/>
         </div>
       </div>
+    
     </>
   )
 }

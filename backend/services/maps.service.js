@@ -33,6 +33,7 @@ module.exports.getDistanceTime = async(origin,destination) =>{
     }
     
     try{
+        console.log("I am here ")
         const key = process.env.GOMAPS_API;
     
         const url = `https://maps.gomaps.pro/maps/api/distancematrix/json?destinations=${encodeURIComponent(destination)}&origins=${encodeURIComponent(origin)}&key=${key}`;
@@ -42,6 +43,7 @@ module.exports.getDistanceTime = async(origin,destination) =>{
                 return res.status(400).json({message : "No Route Found"});
             }
             const element = response.data.rows[0].elements[0];
+            console.log("Distance and Time: ", element);
             return element;
         } else {
             throw new Error('Unable to fetch Distance and Time');

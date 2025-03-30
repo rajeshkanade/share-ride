@@ -15,6 +15,7 @@ import OnboardingSlider from '../../components/OnboardingSlider'
 import ContactUs from '../../components/ContactUs'
 import HowToUse from '../Pages/HowToUse'
 import AboutUs from '../Pages/AboutUs'
+import Riding from '../Pages/Riding'
 const Router = () => {
   return (
     <>
@@ -26,6 +27,7 @@ const Router = () => {
         <Route path='/contact' element={<ContactUs/>}/>
         <Route path='/how-to-use' element={<HowToUse></HowToUse>}/>
         <Route path='/about' element={<AboutUs></AboutUs>}/>
+        <Route path='/riding' element={<Riding/>}/>
 
         <Route path='/signup' element={<Signup/>}/>
         <Route path='/captain-login' element={<CaptainLogin/>}/>

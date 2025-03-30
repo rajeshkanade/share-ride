@@ -29,6 +29,7 @@ module.exports.getDistanceTime = async(req,res,next) =>{
 
     try{
         const distanceTime = await mapService.getDistanceTime(origin,destination);
+        // console.log("Distance and Time : ",distanceTime);
         res.status(200).json(distanceTime);
 
         

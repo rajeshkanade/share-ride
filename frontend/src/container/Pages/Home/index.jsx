@@ -9,6 +9,7 @@ import { LocateIcon, MapPinCheckInside } from 'lucide-react'
 import ContactUs from '../../../components/ContactUs'
 import LoginToSeeActivity from '../../../components/LoginToSeeActivity'
 import axios from 'axios'
+import MapView from '../../../components/MapView'
 
 const Home = () => {
   const [pickup, setPickup] = useState('')
@@ -218,7 +219,8 @@ const Home = () => {
         </div>
         </div>
         <div className="w-1/2 bg-gray-200 rounded-lg">
-          <img width="100%" height="100%" src={mapImg} alt="" />
+          {/* <img width="100%" height="100%" src={mapImg} alt="" /> */}
+          <MapView/>
         </div>
       </main>
 

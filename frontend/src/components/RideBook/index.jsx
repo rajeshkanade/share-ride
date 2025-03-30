@@ -75,12 +75,13 @@ const RideBook = ({ setIsShow}) => {
    
   }
   const setIsShowFun = async() =>{
+    console.log("pickup and dropout "  , pickup, dropout);
     if(pickup && dropout){
       try {
         const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/get-fare`, {
           params: { pickup: pickup, destination: dropout },
           headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`
+        Authorization: `bearer ${localStorage.getItem("token")}`
           }
         })
         console.log(response.data)
