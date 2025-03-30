@@ -50,7 +50,7 @@ const Login = () => {
   }
   return (
     <>
-      <div className='min-h-screen w-full bg-gray-200 flex justify-center items-center'>
+      {/* <div className='min-h-screen w-full bg-gray-200 flex justify-center items-center'>
         <div className='w-30 bg-white rounded'>
             <LoginSignupHeader header={"User Login"} Icon={ShieldUser} description={"Welcome back, Login to user Account"}/>
             <form className='w-full p-3 flex flex-col gap-3' onSubmit={(e)=>{
@@ -73,7 +73,28 @@ const Login = () => {
             </form>
               <SecondaryButton content={'Login as Driver'} link={'/captain-login'}/>
         </div>
+      </div> */}
+      <div className='min-h-screen w-full bg-gray-200 flex justify-center items-center px-4 sm:px-6 lg:px-8'>
+      <div className='w-full max-w-sm sm:max-w-md bg-white rounded-lg shadow-md p-6 sm:p-8'>
+        <LoginSignupHeader header={'User Login'} Icon={ShieldUser} description={'Welcome back, Login to user Account'} />
+        <form className='w-full flex flex-col gap-4' onSubmit={formSubmit}>
+          <InputField value={username} callback={setUsername} type={'email'} label='Email' Icon={User} required={true} />
+          <InputField value={password} callback={setPassword} type={'password'} label='Password' Icon={LockKeyhole} required={true} />
+          
+          <div className='flex justify-between items-center text-sm'>
+            <div className='flex items-center'>
+              <input type='checkbox' name='remember me' className='mr-2 accent-primary-500' />
+              <label htmlFor='remember me'>Remember me</label>
+            </div>
+            <Link to='/forgot-password' className='text-primary-600 hover:underline'>Forgot Password?</Link>
+          </div>
+          
+          <PrimaryButton content={'Login'} />
+          <DontOrHaveAccount content={"Don't have an Account ? "} link={'/signup'} heading={'Register'} />
+        </form>
+        <SecondaryButton content={'Login as Driver'} link={'/captain-login'} className='mt-4' />
       </div>
+    </div>
     </>
   )
 }

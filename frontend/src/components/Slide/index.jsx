@@ -10,7 +10,7 @@ function Slide({ title, subtitle, imageAlt, imageSrc }) {
       <img
         alt={imageAlt}
         src={imageSrc}
-        className="object-contain overflow-hidden w-full aspect-square h-[400px] max-w-[600px] max-sm:h-[300px]"
+        className="object-contain overflow-hidden w-full h-[700px] max-w-[900px] max-sm:h-[500px]"
       />
     </article>
   );

@@ -15,11 +15,13 @@ import OnboardingSlider from '../../components/OnboardingSlider'
 import ContactUs from '../../components/ContactUs'
 import HowToUse from '../Pages/HowToUse'
 import AboutUs from '../Pages/AboutUs'
+import Error404 from '../Pages/Error404'
+import LandingPage from '../Pages/LandingPage'
 const Router = () => {
   return (
     <>
      <Routes>
-        <Route path='/' element={<OnboardingSlider/>}/>
+        <Route path='/' element={<LandingPage/>}/>
         <Route path='/home' element={<Home/>}/>
         <Route path='/login' element={<Login/>}/>
         <Route path='/signup' element={<Signup/>}/>
@@ -36,6 +38,7 @@ const Router = () => {
         <CaptainDashboard/>
         </CaptainProtectWrapper>} />
         <Route path="/captain-assignment" element={<CaptainRideAssignment/>}/>
+        <Route path='*' element={<Error404/>}/>
     </Routes> 
     </>
   )

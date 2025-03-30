@@ -5,9 +5,9 @@ import SlideIndicators from "../SlideIndicators";
 import NavigationButtons from "../NavigationButtons";
 import SliderFooter from "../SliderFooter";
 // import img1 from "../../assets/booking.svg";
-import img1 from "../../assets/img1.jpg";
-import img2 from "../../assets/img2.jpg";
-import img3 from "../../assets/img3.jpg";
+import img1 from "../../assets/img1.png";
+import img2 from "../../assets/img2.png";
+import img3 from "../../assets/img3.png";
 import Navbar from "../Navbar";
 import LandingPageNavbar from "../LandingPageNavbar";
 
