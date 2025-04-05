@@ -41,31 +41,7 @@ function Ride() {
     setBookRideInvisible(value);
   };
 
-  const getCoordinates = async (address) => {
-    const key = import.meta.env.VITE_GOMAPS_API_KEY;
-    // console.log("address : ", address);
-    const url = `https://maps.gomaps.pro/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${key}`;
-    try {
-      const response = await axios.get(url);
-      // console.log("response data from getCoordinates: ", response.data);
-      if (response.data.status === "OK") {
-        const location = response.data.results[0].geometry.location;
-
-        return {
-          ltd: location.lat,
-          lng: location.lng,
-        };
-      } else {
-        // console.error("Error fetching coordinates:", response.data.status);
-        throw new Error("Unable to fetch coordinates");
-
-      }
-    } catch (error) {
-      // console.error(error);
-      throw error;
-    }
-  };
-
+ 
   useEffect(() => {
     const storedPickup = localStorage.getItem("pickup");
     const storedDestination = localStorage.getItem("destination");
@@ -78,35 +54,43 @@ function Ride() {
     setLocationFromStorage(updatedLocation);
 
 
-    getAllCoordinates();
+    // getAllCoordinates();
 
   }, []);
 
-  const getAllCoordinates = async () => {
-    // console.log("location from storage from getallcoordinates: ", locationFromStorage);
-    if (locationFromStorage.pickup) {
-      // console.log("pickup location I am here : ", locationFromStorage.pickup);
-      getCoordinates(locationFromStorage.pickup)
-        .then((data) => {
-          // console.log("pickup coordinates : ", data);
-          setPickupCoordinates(data);
-        })
-        .catch((error) => {
-          console.error("Error fetching pickup coordinates:", error);
-        });
-    }
+  useEffect(()=>{
+    setAllCoordinates();
+ },[])
 
-    if (locationFromStorage.destination) {
-      getCoordinates(locationFromStorage.destination)
-        .then((data) => {
-          // console.log("destination coordinates : ", data);
-          setDestinationCoordinates(data);
-        })
-        .catch((error) => {
-          console.error("Error fetching destination coordinates:", error);
-        });
-    }
-  }
+ const setAllCoordinates = async() =>{
+   setPickupCoordinates(await getCoordinates(localStorage.getItem("pickup")));
+   setDestinationCoordinates(await getCoordinates(localStorage.getItem("destination")));
+ }
+
+ const getCoordinates = async (address) => {
+   const key = import.meta.env.VITE_GOMAPS_API_KEY;
+   // console.log("address : ", address);
+   const url = `https://maps.gomaps.pro/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${key}`;
+   try {
+     const response = await axios.get(url);
+     // console.log("response data from getCoordinates: ", response.data);
+     if (response.data.status === "OK") {
+       const location = response.data.results[0].geometry.location;
+
+       return {
+         ltd: location.lat,
+         lng: location.lng,
+       };
+     } else {
+       // console.error("Error fetching coordinates:", response.data.status);
+       throw new Error("Unable to fetch coordinates");
+
+     }
+   } catch (error) {
+     // console.error(error);
+     throw error;
+   }
+ };
 
 
 

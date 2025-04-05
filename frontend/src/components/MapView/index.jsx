@@ -41,6 +41,22 @@ function RecenterMap({ center }) {
   return null;
 }
 
+// Component to adjust map bounds based on locations
+function AdjustMapBounds({ startLocation, endLocation, userLocation }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (startLocation && endLocation) {
+      const bounds = L.latLngBounds([startLocation, endLocation]);
+      map.fitBounds(bounds, { padding: [50, 50] }); // Adjust padding as needed
+    } else if (userLocation) {
+      map.setView(userLocation, 13); // Default zoom level for user location
+    }
+  }, [startLocation, endLocation, userLocation, map]);
+
+  return null;
+}
+
 // Component to add routing to the map
 function Routing({ startLocation, endLocation }) {
   const map = useMap();
@@ -149,6 +165,11 @@ function MapView({ pickupLoc, destinationLoc }) {
     <section className="flex relative flex-col items-end mx-auto w-full text-sm font-medium text-green-600 bg-neutral-200 h-full max-md:px-5 max-md:pb-24 max-md:max-w-full h-full">
       <MapContainer center={startLocation} zoom={13} style={{ height: "100%", width: "100%" }}>
         <RecenterMap center={startLocation} />
+        <AdjustMapBounds
+          startLocation={isValidLatLng(startLocation) ? startLocation : null}
+          endLocation={isValidLatLng(endLocation) ? endLocation : null}
+          userLocation={isValidLatLng(userLocation) ? userLocation : null}
+        />
         {/* Ensure Routing component uses startLocation and endLocation */}
         {isValidLatLng(startLocation) && isValidLatLng(endLocation) && (
           <Routing
