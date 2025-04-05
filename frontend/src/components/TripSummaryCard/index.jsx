@@ -25,7 +25,7 @@ function TripSummaryCard({ trip }) {
           />
           <span className="mt-2 text-xs text-gray-500">Duration</span>
           <span className="mt-1.5 text-base font-medium text-neutral-800">
-            {trip.duration.hours} hr {trip.duration.minutes} min
+            {(trip.duration.hours == "0") ? "" : trip.duration.hours + "hr"} {trip.duration.minutes} min
           </span>
         </div>
        

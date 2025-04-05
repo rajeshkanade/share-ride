@@ -21,6 +21,7 @@ const Home = () => {
   const navigate = useNavigate();
   console.log("isOpen : ",isOpen) ;
   const token = localStorage.getItem("token");
+  console.log("suggestion object : ",suggestions);
   
   const fetchSuggestions = async (input) => {
     try {
@@ -31,6 +32,7 @@ const Home = () => {
         }
       })
       setSuggestions(response.data || [])
+     
     } catch (error) {
       console.error("Error fetching suggestions:", error)
       setSuggestions([])
@@ -48,7 +50,6 @@ const Home = () => {
       fetchSuggestions(dropout)
     }
   }, [dropout])
-
 
   const openRidePage = () =>{
     if(pickup && dropout){

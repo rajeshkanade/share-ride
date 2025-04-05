@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DriverCard from "../DriverCard";
 import TripRouteCard from "../TripRouteCard";
 import TripSummaryCard from "../TripSummaryCard";
@@ -7,28 +7,80 @@ import PaymentMethodCard from "../PaymentMethodCard";
 import MapView from "../MapView";
 import PassengerProfile from "../PassengerProfile";
 import CaptainPaymentCard from "../CaptainPaymentCard";
-
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 function CaptainRideStartComp({ ride }) {
+  // console.log("ride data in captain ride start comp : ", ride);
+  // console.log("ride data passenger name : ", ride?.user?.fullname.firstname + " " + ride?.user?.fullname.lastname);
   const [passenger, setPassenger] = useState({
-    name: ride?.user?.fullname.firstname + " " + ride?.user?.fullname.lastname || "Michael Chen",
-    email: ride?.user?.email || "michael.c@rideapp.com",
-    rating: ride?.user?.rating || 4.8,
-    image: ride?.user?.image || "https://placehold.co/100x100",
+    name: "" ,
+    email: "" ,
+    rating: 4.5,
+    image: "" ,
   });
 
-  const [paymentStatus, setPaymentStatus] = useState(ride?.paymentStatus || "pending");
+  // console.log("passenger data in captain ride start comp : ", passenger);
+  const [paymentStatus, setPaymentStatus] = useState(null);
 
-  const [trip, setTrip] = useState({
-      pickup: ride?.pickup || "N/A",
-      destination: ride?.destination || "N/A",
-      distance: (ride?.distance / 1000).toFixed(2) || "N/A",
-      duration: {
-        hours : Math.floor(ride?.duration / 3600) || "N/A",
-        minutes : Math.floor((ride?.duration / 60) % 60) || "N/A",
-      },
-      price: ride?.fare || 0,
-      discount: ride?.fare * 2 /100 || 0,
-    });
+  const [trip, setTrip] = useState(  {
+    pickup: " ",
+    destination: " ",
+    distance: " ",
+    duration: {
+      hours : 0 ,
+      minutes : 0 ,
+    },
+    price:  0,
+    discount:  0,
+  });
+
+    // console.log("duration in hour : " , Math.floor(ride?.duration / 3600));
+
+    // console.log("trip data in captain ride start comp : ", trip);
+const navigate = useNavigate();
+    useEffect(() => {
+      setPassenger({
+        name: ride?.user?.fullname.firstname + " " + ride?.user?.fullname.lastname ,
+        email: ride?.user?.email ,
+        rating: ride?.user?.rating || 4.5,
+        // image: ride?.user?.image ,
+      })
+      setPaymentStatus(ride?.paymentStatus || "pending")
+      setTrip(
+        {
+          pickup: ride?.pickup,
+          destination: ride?.destination,
+          distance: (ride?.distance / 1000).toFixed(2),
+          duration: {
+            hours : Math.floor(ride?.duration / 3600) ,
+            minutes : Math.floor((ride?.duration / 60) % 60) ,
+          },
+          price: ride?.fare || 0,
+          discount: ride?.fare * 2 /100 || 0,
+        }
+      )
+    }, [ride])
+    
+    const handleClick = async() => {
+      // Handle ride completion logic here
+      console.log("token : ", localStorage.getItem("token"));
+      console.log("Ride completed!");
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/end-ride`,{
+          
+           params : { rideId: ride._id},
+              headers : {
+                Authorization : `bearer ${localStorage.getItem("token")}`
+              }
+              ,
+            }
+        
+      )
+      if(response.status === 200){
+        console.log("Response from server: ", response.data);
+        navigate("/captain-home", { state: { ride: response.data } }); // Pass ride data as state
+        // Handle successful ride completion here
+      }
+    }
 
   return (
     <main className="flex font-[Inter] min-h-screen w-full bg-[#F8FAF8]">
@@ -37,7 +89,7 @@ function CaptainRideStartComp({ ride }) {
           <PassengerProfile passenger={passenger} />
           <TripRouteCard trip={trip} />
           <TripSummaryCard trip={trip} />
-          <CaptainPaymentCard paymentStatus={paymentStatus} />
+          <CaptainPaymentCard paymentStatus={paymentStatus} handleSubmit={handleClick}/>
         </section>
       </div>
     </main>

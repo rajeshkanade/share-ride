@@ -758,8 +758,6 @@ Example:
 
 
 
-
-
 # Rides
 
 ## Create Ride
@@ -841,6 +839,7 @@ Example:
   ]
 }
 ```
+
 ## Get Fare
 
 ### Endpoint
@@ -892,6 +891,233 @@ Example:
     {
       "msg": "Invalid Destination Location",
       "param": "destination",
+      "location": "query"
+    }
+  ]
+}
+```
+
+## Confirm Ride
+
+### Endpoint
+
+`/rides/confirm`
+
+### Description
+This endpoint is used by captains to confirm a ride request.
+
+### Method
+`POST`
+
+### Request Body
+The request body should be a JSON object with the following fields:
+- `rideId`: A string representing the ride ID (required)
+
+### Example: Request Body
+
+```json
+{
+  "rideId": "ride_id"
+}
+```
+
+### Responses
+
+#### Success
+- **Status Code**: 200 OK
+- **Body**: A JSON object containing the confirmed ride information.
+
+Example:
+```json
+{
+  "_id": "ride_id",
+  "user": {
+    "_id": "user_id",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john.doe@example.com"
+  },
+  "captain": {
+    "_id": "captain_id",
+    "fullname": {
+      "firstname": "Jane",
+      "lastname": "Smith"
+    },
+    "email": "jane.smith@example.com"
+  },
+  "pickup": "123 Main St",
+  "destination": "456 Elm St",
+  "fare": 100,
+  "status": "accepted",
+  "otp": "1234"
+}
+```
+
+#### Validation Error
+- **Status Code**: 400 Bad Request
+- **Body**: A JSON object containing the validation errors.
+
+Example:
+```json
+{
+  "errors": [
+    {
+      "msg": "Invalid ride Id",
+      "param": "rideId",
+      "location": "body"
+    }
+  ]
+}
+```
+
+---
+
+## Start Ride
+
+### Endpoint
+
+`/rides/start-ride`
+
+### Description
+This endpoint is used by captains to start a ride after verifying the OTP.
+
+### Method
+`GET`
+
+### Query Parameters
+- `rideId`: A string representing the ride ID (required)
+- `otp`: A string representing the OTP provided by the user (required)
+
+### Example: Request
+
+`GET /rides/start-ride?rideId=ride_id&otp=1234`
+
+### Responses
+
+#### Success
+- **Status Code**: 200 OK
+- **Body**: A JSON object containing the ride information after it has started.
+
+Example:
+```json
+{
+  "_id": "ride_id",
+  "user": {
+    "_id": "user_id",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john.doe@example.com"
+  },
+  "captain": {
+    "_id": "captain_id",
+    "fullname": {
+      "firstname": "Jane",
+      "lastname": "Smith"
+    },
+    "email": "jane.smith@example.com"
+  },
+  "pickup": "123 Main St",
+  "destination": "456 Elm St",
+  "fare": 100,
+  "status": "ongoing",
+  "duration": 30,
+  "distance": 10
+}
+```
+
+#### Validation Error
+- **Status Code**: 400 Bad Request
+- **Body**: A JSON object containing the validation errors.
+
+Example:
+```json
+{
+  "errors": [
+    {
+      "msg": "Invalid ride Id",
+      "param": "rideId",
+      "location": "query"
+    },
+    {
+      "msg": "Invalid OTP",
+      "param": "otp",
+      "location": "query"
+    }
+  ]
+}
+```
+
+---
+
+## End Ride
+
+### Endpoint
+
+`/rides/end-ride`
+
+### Description
+This endpoint is used by captains to end a ride.
+
+### Method
+`GET`
+
+### Query Parameters
+- `rideId`: A string representing the ride ID (required)
+
+### Example: Request
+
+`GET /rides/end-ride?rideId=ride_id`
+
+### Responses
+
+#### Success
+- **Status Code**: 200 OK
+- **Body**: A JSON object containing the ride information after it has been completed.
+
+Example:
+```json
+{
+  "_id": "ride_id",
+  "user": {
+    "_id": "user_id",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john.doe@example.com"
+  },
+  "captain": {
+    "_id": "captain_id",
+    "fullname": {
+      "firstname": "Jane",
+      "lastname": "Smith"
+    },
+    "email": "jane.smith@example.com"
+  },
+  "pickup": "123 Main St",
+  "destination": "456 Elm St",
+  "fare": 100,
+  "status": "completed",
+  "duration": 30,
+  "distance": 10
+}
+```
+
+#### Validation Error
+- **Status Code**: 400 Bad Request
+- **Body**: A JSON object containing the validation errors.
+
+Example:
+```json
+{
+  "errors": [
+    {
+      "msg": "Invalid ride Id",
+      "param": "rideId",
       "location": "query"
     }
   ]

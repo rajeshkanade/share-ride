@@ -21,7 +21,7 @@ function RideRequestCard({RideDetails ,ride , captain , setRideStartCard , setRi
     useEffect(()=>{
         // setRideData(ride);
 
-    },[confirmButtonPanel,ride,captain])
+    },[confirmButtonPanel,ride,captain,setRideData])
 
     const handleSubmit = async(e) => {
           e.preventDefault();

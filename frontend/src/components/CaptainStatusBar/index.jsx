@@ -1,6 +1,6 @@
 import React from "react";
 
-function CaptainStatusBar() {
+function CaptainStatusBar({captain}) {
   return (
     <header className="flex flex-wrap gap-5 justify-between py-4 pr-6 pl-20 w-full bg-green-100 shadow-[0px_2px_4px_rgba(0,0,0,0.08)] max-md:px-5 max-md:max-w-full">
       <div className="px-8 py-2 my-auto text-sm font-medium text-green-600 whitespace-nowrap rounded-lg bg-green-600 bg-opacity-10 max-md:pl-5">
@@ -20,7 +20,7 @@ function CaptainStatusBar() {
           <div className="flex shrink-0 w-10 h-10 border-2 border-green-600 border-solid rounded-[26843500px]" />
           <div className="flex flex-col self-start">
             <h2 className="text-sm font-medium text-neutral-800">
-              John Driver
+              {captain?.fullname.firstname} + " " + {captain?.fullname.lastname}
             </h2>
             <p className="self-start text-xs text-gray-500">4.92 ★</p>
           </div>

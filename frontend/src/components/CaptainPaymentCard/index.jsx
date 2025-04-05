@@ -1,7 +1,8 @@
 "use client";
 import React, { useState } from "react";
+import axios from "axios"
 
-function CaptainPaymentCard({ paymentStatus}) {
+function CaptainPaymentCard({ paymentStatus , handleSubmit}) {
   const [status, setStatus] = useState(paymentStatus);
 
   // Status configurations with appropriate colors and icons
@@ -105,6 +106,8 @@ function CaptainPaymentCard({ paymentStatus}) {
     }
   };
 
+  
+
   return (
     <article className="bg-white rounded-[12px] p-[24px] shadow-[0_2px_12px_rgba(0,0,0,0.08)]">
       <h3 className="text-[16px] font-semibold text-[#1A1A1A] mb-[16px]">
@@ -161,6 +164,12 @@ function CaptainPaymentCard({ paymentStatus}) {
           </div>
         ) 
      }
+ <div className="flex justify-center items-center w-full">
+            <button
+             className='flex justify-center items-center w-full py-2 border border-green-500 text-green-500 rounded-md hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500 mb-4'
+             onClick={handleSubmit}
+             >Ride Completed</button>
+          </div>
     </article>
   );
 }

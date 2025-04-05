@@ -9,12 +9,15 @@ import RideRequestCard from "../../../components/RideRequestCard";
 import { Car, X } from "lucide-react";
 import { SocketDataContext } from "../../../context/SocketContext";
 import { RideDataContext } from "../../../context/RideContext";
+import { useLocation } from "react-router-dom";
 
 function CaptainDashboard() {
   const {captain} = useContext(CaptainDataContext);
   const [captainData, setCaptainData] = useState({})
   const [openRequestPanel, setOpenRequestPanel] = useState(false)
   const {socket , sendMessage, receiveMessage} = useContext(SocketDataContext);
+  const location = useLocation();
+  const rideEnd = location.state?.ride; // Retrieve ride data from state
   // const [ride, setRide] = useState(null);
 
   const {ride , setRide} = useContext(RideDataContext);
@@ -52,6 +55,13 @@ function CaptainDashboard() {
       setOpenRequestPanel(true); // Open the request panel when a new ride request is received
     });
   }, [socket]);
+
+  useEffect(()=>{
+    if(rideEnd){
+      console.log("ride ended Successfully : ", rideEnd);
+      alert("Ride Ended Congrats");
+    }
+  },[rideEnd])
   
    return (
     <main className="flex flex-col bg-gray-50 min-h-screen relative">

@@ -15,12 +15,17 @@ function CaptainRideAssignment() {
   const {ride} = useContext(RideDataContext);
   const {captain} = useContext(CaptainDataContext);
   const [otp,setOtp] = useState("");
-  const [rideData, setRideData] = useState(null);
+  const [rideData, setRideData] = useState({});
+  const [pickupCoordinates, setPickupCoordinates] = useState({});
+  const [destinationCoordinates, setDestinationCoordinates] = useState({});
   const getDistanceAndTime = () =>{
 
   }
   console.log("rides from ass : ",ride )
+  console.log("rides data from ass : ",rideData )
   console.log("token from storage : ", localStorage.getItem("token"));
+  console.log("pickup Coordintes", pickupCoordinates);
+  console.log("destination Coordinates", destinationCoordinates);
 
   function setRideStartCardFun(data){
     setRideStartCard(data);
@@ -31,7 +36,41 @@ function CaptainRideAssignment() {
   }
     
   useEffect(() => {
-  }, [rideStartCard, rideData])
+  }, [rideStartCard, rideData,ride])
+
+  useEffect(()=>{
+     setAllCoordinates();
+  },[])
+
+  const setAllCoordinates = async() =>{
+    setPickupCoordinates(await getCoordinates(ride.pickup));
+    setDestinationCoordinates(await getCoordinates(ride.destination));
+  }
+
+  const getCoordinates = async (address) => {
+    const key = import.meta.env.VITE_GOMAPS_API_KEY;
+    // console.log("address : ", address);
+    const url = `https://maps.gomaps.pro/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${key}`;
+    try {
+      const response = await axios.get(url);
+      // console.log("response data from getCoordinates: ", response.data);
+      if (response.data.status === "OK") {
+        const location = response.data.results[0].geometry.location;
+
+        return {
+          ltd: location.lat,
+          lng: location.lng,
+        };
+      } else {
+        // console.error("Error fetching coordinates:", response.data.status);
+        throw new Error("Unable to fetch coordinates");
+
+      }
+    } catch (error) {
+      // console.error(error);
+      throw error;
+    }
+  };
   
 
   return (
@@ -57,7 +96,7 @@ function CaptainRideAssignment() {
              }
             </div>
             <div className=" w-[70%] p-5 h-[90vh]  max-md:ml-0 max-md:w-full">
-              <MapView />
+              <MapView pickupLoc={pickupCoordinates} destinationLoc={destinationCoordinates} />
             </div>
           </div>
         </div>

@@ -50,7 +50,8 @@ const rideSchema = new mongoose.Schema({
         type : String,
         select : false,
         required : true,
-    }
+    },
+    
 
 })
 

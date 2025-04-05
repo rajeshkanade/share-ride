@@ -9,7 +9,7 @@ function FareSummary({fare}) {
   useEffect(()=>{
     setFareData({
       price : fare,
-      discount : (fare * 0.2).toFixed(2),
+      discount : (fare * 0.02).toFixed(2),
     })
   },[fare])
   return (
@@ -23,7 +23,7 @@ function FareSummary({fare}) {
         </div>
       </div>
       <div className="flex gap-5 justify-between mt-2 w-full text-sm">
-        <span className="text-gray-500">Discount 5%</span>
+        <span className="text-gray-500">Discount 2%</span>
         <div className="flex whitespace-nowrap text-neutral-800">
           <span>₹</span>
           <span>{fareData.discount}</span>
@@ -32,7 +32,7 @@ function FareSummary({fare}) {
       <div className="flex shrink-0 mt-2 max-w-full h-px bg-zinc-200 w-full justify-between " />
       <div className="flex gap-5 justify-between mt-2.5 text-base font-medium text-neutral-800">
         <span>Final Price</span>
-        <span>{fareData.price + fareData.discount}</span>
+        <span>{(fareData.price - fareData.discount)}</span>
       </div>
     </>
   );
