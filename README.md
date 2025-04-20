@@ -73,6 +73,38 @@ share-ride/
 - **Frontend**: React, Vite, Tailwind CSS
 - **Other Tools**: Axios, React Router, React Toastify, Leaflet
 
+## Flow of Activities
+
+### For Passengers (Users)
+1. **Register/Login**: Create an account or log in to the application.
+2. **Book a Ride**:
+   - Enter the pickup and drop-off locations.
+   - View the estimated fare and available captains.
+   - Confirm the booking.
+3. **Track Ride**:
+   - View the captain's location in real-time on the map.
+   - Receive notifications when the captain arrives.
+4. **Start Ride**:
+   - Board the vehicle and confirm the start of the ride.
+5. **Complete Ride**:
+   - Reach the destination and confirm ride completion.
+   - Provide feedback and rate the captain.
+
+### For Captains (Drivers)
+1. **Register/Login**: Create an account or log in to the application.
+2. **Go Online**:
+   - Set your status to "Available" to receive ride requests.
+3. **Accept Ride**:
+   - Receive a ride request notification.
+   - View passenger details and accept the ride.
+4. **Navigate to Pickup**:
+   - Use the integrated map to navigate to the passenger's location.
+5. **Start Ride**:
+   - Confirm the passenger has boarded and start the ride.
+6. **Complete Ride**:
+   - Mark the ride as completed upon reaching the destination.
+   - View earnings and feedback from the passenger.
+
 ## Contributing
 Contributions are welcome! Please fork the repository and submit a pull request for any enhancements or bug fixes.
 
