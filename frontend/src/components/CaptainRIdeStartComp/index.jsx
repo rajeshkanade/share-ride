@@ -7,80 +7,85 @@ import PaymentMethodCard from "../PaymentMethodCard";
 import MapView from "../MapView";
 import PassengerProfile from "../PassengerProfile";
 import CaptainPaymentCard from "../CaptainPaymentCard";
+import FeedbackModal from "../FeedbackModal";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 function CaptainRideStartComp({ ride }) {
   // console.log("ride data in captain ride start comp : ", ride);
   // console.log("ride data passenger name : ", ride?.user?.fullname.firstname + " " + ride?.user?.fullname.lastname);
   const [passenger, setPassenger] = useState({
-    name: "" ,
-    email: "" ,
+    name: "",
+    email: "",
     rating: 4.5,
-    image: "" ,
+    image: "",
   });
 
   // console.log("passenger data in captain ride start comp : ", passenger);
   const [paymentStatus, setPaymentStatus] = useState(null);
 
-  const [trip, setTrip] = useState(  {
+  const [trip, setTrip] = useState({
     pickup: " ",
     destination: " ",
     distance: " ",
     duration: {
-      hours : 0 ,
-      minutes : 0 ,
+      hours: 0,
+      minutes: 0,
     },
-    price:  0,
-    discount:  0,
+    price: 0,
+    discount: 0,
   });
 
-    // console.log("duration in hour : " , Math.floor(ride?.duration / 3600));
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
 
-    // console.log("trip data in captain ride start comp : ", trip);
-const navigate = useNavigate();
-    useEffect(() => {
-      setPassenger({
-        name: ride?.user?.fullname.firstname + " " + ride?.user?.fullname.lastname ,
-        email: ride?.user?.email ,
-        rating: ride?.user?.rating || 4.5,
-        // image: ride?.user?.image ,
-      })
-      setPaymentStatus(ride?.paymentStatus || "pending")
-      setTrip(
-        {
-          pickup: ride?.pickup,
-          destination: ride?.destination,
-          distance: (ride?.distance / 1000).toFixed(2),
-          duration: {
-            hours : Math.floor(ride?.duration / 3600) ,
-            minutes : Math.floor((ride?.duration / 60) % 60) ,
-          },
-          price: ride?.fare || 0,
-          discount: ride?.fare * 2 /100 || 0,
-        }
-      )
-    }, [ride])
-    
-    const handleClick = async() => {
-      // Handle ride completion logic here
-      console.log("token : ", localStorage.getItem("token"));
-      console.log("Ride completed!");
-      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/end-ride`,{
-          
-           params : { rideId: ride._id},
-              headers : {
-                Authorization : `bearer ${localStorage.getItem("token")}`
-              }
-              ,
-            }
-        
-      )
-      if(response.status === 200){
-        console.log("Response from server: ", response.data);
-        navigate("/captain-home", { state: { ride: response.data } }); // Pass ride data as state
-        // Handle successful ride completion here
-      }
+  const navigate = useNavigate();
+  useEffect(() => {
+    setPassenger({
+      name: ride?.user?.fullname.firstname + " " + ride?.user?.fullname.lastname,
+      email: ride?.user?.email,
+      rating: ride?.user?.rating || 4.5,
+      // image: ride?.user?.image ,
+    });
+    setPaymentStatus(ride?.paymentStatus || "pending");
+    setTrip({
+      pickup: ride?.pickup,
+      destination: ride?.destination,
+      distance: (ride?.distance / 1000).toFixed(2),
+      duration: {
+        hours: Math.floor(ride?.duration / 3600),
+        minutes: Math.floor((ride?.duration / 60) % 60),
+      },
+      price: ride?.fare || 0,
+      discount: (ride?.fare * 2) / 100 || 0,
+    });
+  }, [ride]);
+
+  const handleClick = async () => {
+    // Handle ride completion logic here
+    console.log("token : ", localStorage.getItem("token"));
+    console.log("Ride completed!");
+    const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/end-ride`, {
+      params: { rideId: ride._id },
+      headers: {
+        Authorization: `bearer ${localStorage.getItem("token")}`,
+      },
+    });
+
+    if (response.status === 200) {
+      console.log("Response from server: ", response.data);
+      toast.success("Ride completed successfully!"); // Show success toast
+      setShowFeedbackModal(true); // Show feedback modal
+    } else {
+      toast.error("Failed to complete the ride. Please try again."); // Show error toast
     }
+  };
+
+  const handleFeedbackSubmit = (feedback) => {
+    console.log("Feedback submitted: ", feedback);
+    setShowFeedbackModal(false);
+    navigate("/captain-home", { state: { ride: ride } }); // Pass ride data as state
+  };
 
   return (
     <main className="flex font-[Inter] min-h-screen w-full bg-[#F8FAF8]">
@@ -89,9 +94,10 @@ const navigate = useNavigate();
           <PassengerProfile passenger={passenger} />
           <TripRouteCard trip={trip} />
           <TripSummaryCard trip={trip} />
-          <CaptainPaymentCard paymentStatus={paymentStatus} handleSubmit={handleClick}/>
+          <CaptainPaymentCard paymentStatus={paymentStatus} handleSubmit={handleClick} />
         </section>
       </div>
+      {showFeedbackModal && <FeedbackModal onSubmit={handleFeedbackSubmit} />}
     </main>
   );
 }

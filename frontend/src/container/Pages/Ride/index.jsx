@@ -8,6 +8,9 @@ import axios from "axios";
 import { SocketDataContext } from "../../../context/SocketContext";
 import { UserDataContext } from "../../../context/UserContext";
 import MapView from "../../../components/MapView";
+import FeedbackModal from "../../../components/FeedbackModal";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Ride() {
   const [isShow, setIsShow] = useState(false);
@@ -20,6 +23,7 @@ function Ride() {
   const [locationFromStorage, setLocationFromStorage] = useState({});
   const [pickupCoordinates, setPickupCoordinates] = useState({});
   const [destinationCoordinates, setDestinationCoordinates] = useState({});
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const navigate = useNavigate();
   const ShowRide = (value) => {
     setIsShow(value);
@@ -115,7 +119,14 @@ function Ride() {
     if (rideComplete) {
       console.log("ride complete data : ", rideComplete);
       location.state.ride = null; // Reset ride state to normal
-      alert("Ride Ended Congrats");
+      sessionStorage.setItem("rideCompleted", "true"); // Store ride completion in session storage
+      toast.success("Ride Ended Congrats"); // Show toast notification
+      setShowFeedbackModal(true); // Show feedback modal
+      setPickupCoordinates(null); // Reset pickup coordinates
+      setDestinationCoordinates(null); // Reset destination coordinates
+    } else if (sessionStorage.getItem("rideCompleted") === "true") {
+      sessionStorage.removeItem("rideCompleted"); // Clear the session storage flag
+      setShowFeedbackModal(false); // Ensure modal does not show on refresh
     }
   }, []);
 
@@ -135,12 +146,17 @@ function Ride() {
     );
   };
 
+  const handleFeedbackSubmit = (feedbackData) => {
+    console.log("Feedback submitted: ", feedbackData);
+    setShowFeedbackModal(false); // Close the modal after submission
+  };
+
   return (
     <div className="container min-w-full min-h-screen bg-gray-100">
       <Navbar />
       <div className="container mx-auto h-full min-h-screen px-4 py-8">
         <div className={`grid grid-cols-1 md:grid-cols-[3fr_3fr_4fr] sm:grid-cols-1 gap-8 h-full`}>
-          <RideBook setIsShow={ShowRide} setFare={getFareFun} />
+          <RideBook setIsShow={ShowRide} setFare={getFareFun} showFeedbackModal={showFeedbackModal} />
           <AvailableRides
             isShow={isShow}
             rideConfirmData={rideConfirmData}
@@ -149,6 +165,9 @@ function Ride() {
           <MapView pickupLoc={pickupCoordinates} destinationLoc={destinationCoordinates} />
         </div>
       </div>
+      {showFeedbackModal && (
+        <FeedbackModal onSubmit={handleFeedbackSubmit} onClose={() => setShowFeedbackModal(false)} />
+      )}
     </div>
   );
 }

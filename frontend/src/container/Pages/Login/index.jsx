@@ -10,44 +10,49 @@ import PrimaryButton from '../../../components/PrimaryButton'
 import DontOrHaveAccount from '../../../components/DontOrHaveAccount'
 import SecondaryButton from '../../../components/SecondaryButton'
 import { UserDataContext } from '../../../context/UserContext'
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password , setPassword] = useState('');
-  // const [userData , setUserData] = useState({});
   const {user,setUser} = useContext(UserDataContext);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-  // useEffect(() => {
-  //   if(token){
-  //     navigate("/");
-  //   }
-
-  // }, [token])
   
-  const formSubmit = async (e) =>{
+  const formSubmit = async (e) => {
     e.preventDefault();
-    // console.log(username, password);
     const userData = {
-      email : username , 
-      password : password
+      email: username,
+      password: password,
+    };
+
+    if (!username || !password) {
+      toast.error('Please fill in all fields.', { position: "top-right" });
+      return;
     }
 
-    try{
-      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`,userData);
-        if(response.status = 200){
-          const data = await response.data;
-          const token = await data.token;
-          setUser(data.user);
-          localStorage.setItem("token",token);
-          navigate('/ride');
-          console.log(data.user);
-        }
-    }catch(err){
-      console.log(err);
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`, userData);
+      if (response.status === 200) {
+        const data = response.data;
+        setUser(data.user);
+        localStorage.setItem('token', data.token);
+        toast.success('Login successful!', { position: "top-right" });
+        navigate('/ride');
+      }
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        toast.error(error.response.data.message, { position: "top-right" });
+      } else {
+        toast.error('Something went wrong. Please try again.', { position: "top-right" });
+      }
     }
-    setUsername("")
-    setPassword("")
-  }
+
+    setUsername('');
+    setPassword('');
+  };
+
   return (
     <>
        <div className='min-h-screen w-full bg-gray-200 flex justify-center items-center'>
@@ -56,8 +61,8 @@ const Login = () => {
             <form className='w-full p-3 flex flex-col gap-3' onSubmit={(e)=>{
               formSubmit(e);
             }}>
-              <InputField value={username} callback={setUsername} type={"email"} label='Email' Icon={User} required={true}/>
-              <InputField value={password} callback={setPassword} type={"password"} label='Password' Icon={LockKeyhole}  required={true}/>
+              <InputField value={username} callback={setUsername} type={"email"} label='Email' Icon={User}/>
+              <InputField value={password} callback={setPassword} type={"password"} label='Password' Icon={LockKeyhole}/>
               <div className='flex justify-between items-center'>
                 <div>
                 <input type="checkbox" name='remember me' className='mr-1 accent-primary-500' />

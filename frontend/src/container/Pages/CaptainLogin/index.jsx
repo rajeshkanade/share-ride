@@ -10,6 +10,8 @@ import { UserDataContext } from '../../../context/UserContext'
 import axios from 'axios'
 import { CaptainDataContext } from '../../../context/CaptainContext'
 import { useNavigate } from 'react-router-dom'
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CaptainLogin = () => {
    const [username, setUsername] = useState('');
@@ -24,25 +26,30 @@ const CaptainLogin = () => {
   
     const formSubmit = async (e) =>{
       e.preventDefault();
-      // console.log(username, password);
+      if (!username || !password) {
+        toast.error('Please fill in all fields.', { position: "top-right" });
+        return;
+      }
       const captainData = {
         email : username , 
         password : password
       }
       try {
         const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/login`,captainData)
-        if(response.status == 200){
+        if(response.status === 200){
           const data = response.data;
-          console.log(data);
           setCaptain(data.captain);
-          const token = data.token;
-          localStorage.setItem("token",token);
+          localStorage.setItem("token",data.token);
+          toast.success('Login successful!', { position: "top-right" });
           navigate("/captain-home");
         }
       } catch (error) {
-        console.log(error);
+        if (error.response && error.response.data.message) {
+          toast.error(error.response.data.message, { position: "top-right" });
+        } else {
+          toast.error('Something went wrong. Please try again.', { position: "top-right" });
+        }
       }
-      // console.log(data)
       setUsername("")
       setPassword("")
     }
@@ -54,8 +61,8 @@ const CaptainLogin = () => {
             <form className='w-full p-3 flex flex-col gap-3' onSubmit={(e)=>{
               formSubmit(e);
             }}>
-              <InputField value={username} callback={setUsername} type={"email"} label='Email' Icon={User} required={true}/>
-              <InputField value={password} callback={setPassword} type={"password"} label='Password' Icon={LockKeyhole}  required={true}/>
+              <InputField value={username} callback={setUsername} type={"email"} label='Email' Icon={User}/>
+              <InputField value={password} callback={setPassword} type={"password"} label='Password' Icon={LockKeyhole}/>
               <div className='flex justify-between items-center'>
                 <div>
                 <input type="checkbox" name='remember me' className='mr-1 accent-primary-500' />
@@ -72,6 +79,7 @@ const CaptainLogin = () => {
               <SecondaryButton content={'Login as User'} link={'/login'} />
         </div>
       </div>
+      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover />
     </>
   )
 }

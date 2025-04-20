@@ -10,6 +10,8 @@ import DontOrHaveAccount from '../../../components/DontOrHaveAccount';
 import { CaptainDataContext } from '../../../context/CaptainContext';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CaptainSignup = () => {
    const [firstName , setFirstName] = useState("")
@@ -29,7 +31,12 @@ const CaptainSignup = () => {
 
     const formSubmit = async(e) =>{
       e.preventDefault();
-      // console.log(username, password);
+
+      if (!firstName || !lastName || !username || !password || !confirmPassword || !vehicleColor || !vehicleType || !vehicleCapacity || !vehiclePlate || !vehicleModel) {
+        toast.error('Please fill out all fields.', { position: toast.POSITION.TOP_RIGHT });
+        return;
+      }
+
       const captainData = {
        fullname : {
         firstname : firstName , 
@@ -48,18 +55,22 @@ const CaptainSignup = () => {
 
       try {
         const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/captains/register`,captainData);
-        if(response.status == 201){
+        if(response.status === 201){
           const data = response.data;
-          console.log("captain : " , data.captain);
           setCaptain(data.captain)
           localStorage.setItem("token",data.token);
-          // console.log("captain" ,captain);
+          toast.success('Registration successful!', { position: toast.POSITION.TOP_RIGHT });
           navigate("/captain-home");
         }
       } catch (error) {
-        console.log("error in api : ", error);
+        if (error.response && error.response.data.errors) {
+          error.response.data.errors.forEach((err) => {
+            toast.error(err.msg, { position: toast.POSITION.TOP_RIGHT });
+          });
+        } else {
+          toast.error('Something went wrong. Please try again.', { position: toast.POSITION.TOP_RIGHT });
+        }
       }
-      // console.log(captainData)
       setUsername("")
       setPassword("")
       setFirstName("")
@@ -80,25 +91,25 @@ const CaptainSignup = () => {
             formSubmit(e);
           }}>
             <div className="flex w-full">
-              <div className='w-[50%] px-2'><InputField value={firstName} callback={setFirstName} type={"text"} label='First Name' Icon={User} required={true}/></div>
-              <div className='w-[50%]'><InputField value={lastName} callback={setLastName} type={"text"} label='Last Name' Icon={UserCheck} required={true}/></div>
+              <div className='w-[50%] px-2'><InputField value={firstName} callback={setFirstName} type={"text"} label='First Name' Icon={User}/></div>
+              <div className='w-[50%]'><InputField value={lastName} callback={setLastName} type={"text"} label='Last Name' Icon={UserCheck}/></div>
             </div>
-            <InputField value={username} callback={setUsername} type={"email"} label='Email' Icon={Mail} required={true}/>
-            <InputField value={password} callback={setPassword} type={"password"} label='Password' Icon={LockKeyhole}  required={true}/>
-            <InputField value={confirmPassword} callback={setConfirmPassword} type={"password"} label='Confirm Password' Icon={ShieldCheck}  required={true}/>
+            <InputField value={username} callback={setUsername} type={"email"} label='Email' Icon={Mail}/>
+            <InputField value={password} callback={setPassword} type={"password"} label='Password' Icon={LockKeyhole}/>
+            <InputField value={confirmPassword} callback={setConfirmPassword} type={"password"} label='Confirm Password' Icon={ShieldCheck}/>
             <div className='w-full'>
             <h3 className="text-xl font-semibold mb-6 mt-5">Vehicle Information</h3>
 
             <div className="flex w-full">
-              <div className='w-[50%] px-2'><InputField value={vehicleColor} callback={setVehicleColor} type={"text"} label='Vehicle Color' Icon={User} required={true}/></div>
-              <div className='w-[50%]'><InputField value={vehiclePlate} callback={setVehiclePlate} type={"text"} label='Plate Number' Icon={UserCheck} required={true}/></div>
+              <div className='w-[50%] px-2'><InputField value={vehicleColor} callback={setVehicleColor} type={"text"} label='Vehicle Color' Icon={User}/></div>
+              <div className='w-[50%]'><InputField value={vehiclePlate} callback={setVehiclePlate} type={"text"} label='Plate Number' Icon={UserCheck}/></div>
             </div>
             <div className="flex w-full">
-              <div className='w-[50%] px-2'><InputField value={vehicleModel} callback={setVehicleModel} type={"text"} label='Vehicle Model' Icon={User} required={true}/></div>
-              <div className='w-[50%]'><InputField value={vehicleType} callback={setVehicleType} type={"text"} label='Vehicle Type' Icon={UserCheck} required={true}/></div>
+              <div className='w-[50%] px-2'><InputField value={vehicleModel} callback={setVehicleModel} type={"text"} label='Vehicle Model' Icon={User}/></div>
+              <div className='w-[50%]'><InputField value={vehicleType} callback={setVehicleType} type={"text"} label='Vehicle Type' Icon={UserCheck}/></div>
             </div>
           <div className="mb-8">
-          <InputField value={vehicleCapacity} callback={setVehicleCapacity} type={"number"} label='Seat Capacity' Icon={LockKeyhole}  required={true}/>
+          <InputField value={vehicleCapacity} callback={setVehicleCapacity} type={"number"} label='Seat Capacity' Icon={LockKeyhole}/>
             
           </div>
 

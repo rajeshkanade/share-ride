@@ -10,6 +10,9 @@ import DontOrHaveAccount from '../../../components/DontOrHaveAccount';
 import axios from 'axios';
 import { UserDataContext } from '../../../context/UserContext';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const Signup = () => {
   const [firstName , setFirstName] = useState("")
   const [lastName , setLastName] = useState("")
@@ -23,39 +26,42 @@ const Signup = () => {
 
   const formSubmit = async(e) =>{
     e.preventDefault();
-    // console.log(username, password);
-    setUserData({
+    if (!firstName || !lastName || !username || !password || !confirmPassword) {
+      toast.error('All fields are required.', { position: toast.POSITION.TOP_RIGHT });
+      return;
+    }
+    if (password !== confirmPassword) {
+      toast.error('Passwords do not match.', { position: toast.POSITION.TOP_RIGHT });
+      return;
+    }
+    const newUser = {
       fullname : {
         firstname : firstName , 
         lastname : lastName,
       },
       email : username , 
       password : password,
-    })
-
-    const newUser = {
-      fullname : {
-        firstname  : firstName,
-        lastname : lastName,
-      },
-      email : username,
-      password : password,
     }
 
     try{
 
       const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`,newUser);
-      if(response.status == 201){
+      if(response.status === 201){
         const data  = response.data ;
         setUser(data.user);
         localStorage.setItem("token",data.token);
+        toast.success('Registration successful!', { position: toast.POSITION.TOP_RIGHT });
         navigate("/");
       }
     }catch(error){
-      console.log(error);
-      
+      if (error.response && error.response.data.errors) {
+        error.response.data.errors.forEach((err) => {
+          toast.error(err.msg, { position: toast.POSITION.TOP_RIGHT });
+        });
+      } else {
+        toast.error('Something went wrong. Please try again.', { position: toast.POSITION.TOP_RIGHT });
+      }
     }
-    // console.log(userData)
     setUsername("")
     setPassword("")
     setFirstName("")
@@ -71,12 +77,12 @@ const Signup = () => {
               formSubmit(e);
             }}>
               <div className="flex w-full">
-                <div className='w-[50%] px-2'><InputField value={firstName} callback={setFirstName} type={"text"} label='First Name' Icon={User} required={true}/></div>
-                <div className='w-[50%]'><InputField value={lastName} callback={setLastName} type={"text"} label='Last Name' Icon={UserCheck} required={true}/></div>
+                <div className='w-[50%] px-2'><InputField value={firstName} callback={setFirstName} type={"text"} label='First Name' Icon={User}/></div>
+                <div className='w-[50%]'><InputField value={lastName} callback={setLastName} type={"text"} label='Last Name' Icon={UserCheck}/></div>
               </div>
-              <InputField value={username} callback={setUsername} type={"email"} label='Email' Icon={Mail} required={true}/>
-              <InputField value={password} callback={setPassword} type={"password"} label='Password' Icon={LockKeyhole}  required={true}/>
-              <InputField value={confirmPassword} callback={setConfirmPassword} type={"password"} label='Confirm Password' Icon={ShieldCheck}  required={true}/>
+              <InputField value={username} callback={setUsername} type={"email"} label='Email' Icon={Mail}/>
+              <InputField value={password} callback={setPassword} type={"password"} label='Password' Icon={LockKeyhole}/>
+              <InputField value={confirmPassword} callback={setConfirmPassword} type={"password"} label='Confirm Password' Icon={ShieldCheck}/>
               <div className='flex justify-between items-center'>
               
               </div>

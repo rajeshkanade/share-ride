@@ -7,7 +7,7 @@ import debounce from 'lodash.debounce'
 import { UserDataContext } from '../../context/UserContext'
 
 
-const RideBook = ({ setIsShow}) => {
+const RideBook = ({ setIsShow , showFeedbackModal}) => {
   const [pickup, setPickup] = useState('')
   const [dropout, setDropout] = useState('')
   const [isOpen, setIsOpen] = useState(false)
@@ -51,7 +51,9 @@ const RideBook = ({ setIsShow}) => {
 
   const debouncedFetchSuggestions = useCallback(debounce((input) => {
     fetchSuggestions(input)
-  }, 300), [])
+  }
+  
+  , 300), [])
 
   useEffect(() => {
     if (pickup.length >= 3) {
@@ -101,6 +103,13 @@ const RideBook = ({ setIsShow}) => {
       setError("Please Fill the Field");
     }
   }
+
+  useEffect(()=>{
+    if(showFeedbackModal) 
+      setPickup("")
+      setDropout("")
+      
+  },[])
 
   return (
     <div>

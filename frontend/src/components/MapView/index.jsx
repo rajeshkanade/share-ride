@@ -147,6 +147,13 @@ function MapView({ pickupLoc, destinationLoc }) {
     console.log("End Location:", endLocation);
   }, [pickupLoc, destinationLoc, userLocation]);
 
+  useEffect(() => {
+    if (!pickupLoc && !destinationLoc) {
+      setStartLocation(userLocation); // Show only user location if ride is completed
+      setEndLocation(null); // Remove destination location
+    }
+  }, [pickupLoc, destinationLoc, userLocation]);
+
   // Update route details dynamically
   useEffect(() => {
     if (startLocation && endLocation) {
