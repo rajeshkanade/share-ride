@@ -1,11 +1,10 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
+import { toast } from "react-toastify";
 
-function PaymentMethodCard({
-  selectedPayment,
-  setSelectedPayment,
-  paymentOptions,
-}) {
+function PaymentMethodCard({ selectedPayment, setSelectedPayment, paymentOptions }) {
+  const [paymentDone, setPaymentDone] = useState(false);
+
   // Payment method icons mapping
   const paymentIcons = {
     card: (
@@ -41,30 +40,26 @@ function PaymentMethodCard({
     wallet: "E-Wallet",
   };
 
+  // Function to handle payment success
+  const paymentSuccessful = () => {
+    toast.success("Payment Successful!");
+    setPaymentDone(true);
+  };
+
   return (
     <article className="bg-white rounded-[12px] p-[24px] shadow-[0_2px_12px_rgba(0,0,0,0.08)]">
-      <h3 className="text-[16px] font-semibold text-[#1A1A1A] mb-[16px]">
-        Payment Method
-      </h3>
-      <div className="flex gap-[12px] flex-wrap">
-        {paymentOptions.map((option) => (
-          <button
-            key={option}
-            className={`flex items-center gap-2 px-4 py-2 rounded-[8px] border ${
-              selectedPayment === option
-                ? "border-[#22C55E] bg-[#F0FDF4] text-[#22C55E]"
-                : "border-[#E5E7EB] text-[#666]"
-            } transition-colors`}
-            onClick={() => setSelectedPayment(option)}
-            aria-pressed={selectedPayment === option}
-          >
-            {paymentIcons[option]}
-            <span className="text-[14px] font-medium">
-              {paymentLabels[option]}
-            </span>
-          </button>
-        ))}
-      </div>
+      <h3 className="text-[16px] font-semibold text-[#1A1A1A] mb-[16px]">Payment</h3>
+      {paymentDone ? (
+        <div className="bg-green-50 rounded-md p-4 flex items-start space-x-4">
+          <div className="text-2xl">⚡</div>
+          <div>
+            <h3 className="font-semibold text-gray-800">Payment Done</h3>
+            <p className="text-sm text-gray-600">Thank you for your payment!</p>
+          </div>
+        </div>
+      ) : (
+       <div class="flex justify-center items-center w-full"><button class="flex justify-center items-center w-full py-2 border border-green-500 text-green-500 rounded-md hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500 mb-4">Ride Completed</button></div>
+      )}
     </article>
   );
 }
