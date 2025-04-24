@@ -18,6 +18,7 @@ import AboutUs from '../Pages/AboutUs'
 import Riding from '../Pages/Riding'
 import Error404 from '../Pages/Error404'
 import LandingPage from '../Pages/LandingPage'
+import ShareRide from '../Pages/ShareRide'
 const Router = () => {
   return (
     <>
@@ -30,7 +31,7 @@ const Router = () => {
         <Route path='/how-to-use' element={<HowToUse></HowToUse>}/>
         <Route path='/about' element={<AboutUs></AboutUs>}/>
         <Route path='/riding' element={<Riding/>}/>
-
+        <Route path="/share-ride" element={<UserProtectWrapper><ShareRide/></UserProtectWrapper>}/>
         <Route path='/signup' element={<Signup/>}/>
         <Route path='/captain-login' element={<CaptainLogin/>}/>
         <Route path='/captain-signup' element={<CaptainSignup/>}/>

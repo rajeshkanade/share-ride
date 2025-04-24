@@ -63,6 +63,10 @@ function CaptainRideStartComp({ ride }) {
 
   const handleClick = async () => {
     // Handle ride completion logic here
+    if(paymentStatus === "pending"){
+      toast.error("Please complete the payment before ending the ride."); // Show error toast
+      return;
+    }
     console.log("token : ", localStorage.getItem("token"));
     console.log("Ride completed!");
     const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/end-ride`, {
@@ -88,13 +92,30 @@ function CaptainRideStartComp({ ride }) {
   };
 
   return (
-    <main className="flex font-[Inter] min-h-screen w-full bg-[#F8FAF8]">
+    <main className="flex font-[Inter] min-h-screen w-full bg-[#F8FAF8] z-100">
       <div className="flex w-full p-[24px] gap-[24px] max-lg:flex-col">
         <section className="w-[30%] max-lg:w-full flex flex-col gap-[16px] w-full">
           <PassengerProfile passenger={passenger} />
           <TripRouteCard trip={trip} />
           <TripSummaryCard trip={trip} />
-          <CaptainPaymentCard paymentStatus={paymentStatus} handleSubmit={handleClick} />
+          <CaptainPaymentCard 
+            paymentStatus={paymentStatus} 
+            setPaymentStatus={setPaymentStatus} 
+            handleSubmit={handleClick} 
+            rideId={ride?._id} 
+          />
+        </section>
+        <section className="w-[70%] max-lg:w-full">
+          <MapView
+            pickupLoc={{
+              ltd: ride?.pickupCoordinates?.latitude,
+              lng: ride?.pickupCoordinates?.longitude,
+            }}
+            destinationLoc={{
+              ltd: ride?.destinationCoordinates?.latitude,
+              lng: ride?.destinationCoordinates?.longitude,
+            }}
+          />
         </section>
       </div>
       {showFeedbackModal && <FeedbackModal onSubmit={handleFeedbackSubmit} />}

@@ -51,6 +51,29 @@ const initializeSocket = (server) => {
       }
     });
 
+    socket.on("join-room", (data) => {
+      const { roomId } = data;
+      if (roomId) {
+        socket.join(roomId);
+        const allRooms = io.sockets.adapter.rooms;
+        console.log(`Socket ${socket.id} joined room: ${roomId}`);
+        console.log("All rooms:", allRooms);
+      } else {
+        console.error("Room ID is missing in join-room event.");
+      }
+    });
+
+    socket.on("payment-done", (data) => {
+      const { roomId } = data;
+      if (roomId) {
+        const roomSockets = io.sockets.adapter.rooms.get(roomId);
+        console.log(`Sockets in room ${roomId}:`, roomSockets);
+        io.to(roomId).emit("payment-done", data);
+      } else {
+        console.error("Room ID is missing in payment-done event.");
+      }
+    });
+
     socket.on("disconnect", () => {
       console.log(`Client disconnected: ${socket.id}`);
     });

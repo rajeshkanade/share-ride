@@ -7,6 +7,18 @@ const FeedbackModal = ({ onSubmit }) => {
 
   useEffect(() => {
     toast.info("Ride Completed! Please rate your ride."); // Show toast notification
+
+    // Ensure the map remains visible and bring the modal to the front
+    const mapContainer = document.querySelector(".leaflet-container");
+    if (mapContainer) {
+      mapContainer.style.zIndex = "0"; // Keep map visible
+    }
+
+    return () => {
+      if (mapContainer) {
+        mapContainer.style.zIndex = "auto"; // Reset z-index when modal closes
+      }
+    };
   }, []);
 
   const handleStarClick = (star) => {
@@ -22,7 +34,7 @@ const FeedbackModal = ({ onSubmit }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 flex bg-opacity-50 bg-black items-center justify-center z-50">
       <div className="bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 rounded-lg shadow-2xl p-8 w-96">
         <h2 className="text-2xl font-bold text-center text-white mb-6">Rate Your Ride</h2>
         <div className="flex justify-center mb-6">

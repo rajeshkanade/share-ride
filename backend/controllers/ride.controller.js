@@ -10,7 +10,7 @@ module.exports.createRide = async(req,res,next) =>{
             return res.status(400).json({errors : errors.array()});
     }
 
-    const {userId , pickup , destination , vehicleType} = req.body;
+    const {userId , pickup , destination , vehicleType } = req.body;
     try{
         const Ride = await rideService.createRide({user : req.user._id, pickup , destination , vehicleType});
         

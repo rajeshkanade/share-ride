@@ -44,8 +44,28 @@ const SocketContext = ({ children }) => {
     }
   };
 
+  const joinRoom = (roomId) => {
+    if (socket) {
+      socket.emit('join-room', { roomId });
+      console.log(`Joined room: ${roomId}`);
+    }
+  };
+
+  const sendMessageToRoom = (roomId, eventName, message) => {
+    if (socket) {
+      socket.emit(eventName, { roomId, ...message });
+      console.log(`Message sent to room ${roomId}:`, message);
+    }
+  };
+
+  const receiveMessageFromRoom = (eventName, callback) => {
+    if (socket) {
+      socket.on(eventName, callback);
+    }
+  };
+
   return (
-    <SocketDataContext.Provider value={{ sendMessage, receiveMessage , socket}}>
+    <SocketDataContext.Provider value={{ sendMessage, receiveMessage, joinRoom, sendMessageToRoom, receiveMessageFromRoom, socket }}>
       {children}
     </SocketDataContext.Provider>
   );

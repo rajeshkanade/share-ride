@@ -64,17 +64,25 @@ function Routing({ startLocation, endLocation }) {
   useEffect(() => {
     if (!map || !startLocation || !endLocation) return;
 
-    const routingControl = L.Routing.control({
-      waypoints: [L.latLng(startLocation), L.latLng(endLocation)],
-      routeWhileDragging: false,
-      show: false, // Hides the instructions panel
-      addWaypoints: false, // Disables adding waypoints
-      draggableWaypoints: false, // Disables dragging waypoints
-      createMarker: () => null, // Prevents markers from being added
-    }).addTo(map);
+    let routingControl;
+
+    try {
+      routingControl = L.Routing.control({
+        waypoints: [L.latLng(startLocation), L.latLng(endLocation)],
+        routeWhileDragging: false,
+        show: false, // Hides the instructions panel
+        addWaypoints: false, // Disables adding waypoints
+        draggableWaypoints: false, // Disables dragging waypoints
+        createMarker: () => null, // Prevents markers from being added
+      }).addTo(map);
+    } catch (error) {
+      console.error("Error initializing routing control:", error);
+    }
 
     return () => {
-      map.removeControl(routingControl);
+      if (routingControl) {
+        map.removeControl(routingControl);
+      }
     };
   }, [map, startLocation, endLocation]);
 

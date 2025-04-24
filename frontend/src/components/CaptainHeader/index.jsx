@@ -4,13 +4,13 @@ import StatusIndicator from "../StatusIndicator";
 import ProfileSection from "../ProfileSection";
 import { CaptainDataContext } from "../../context/CaptainContext";
 
-function CaptainHeader({captainName}) {
+function CaptainHeader({captainName , status}) {
   // console.log(captain);
   return (
     <header className="flex justify-between items-center px-6 w-full bg-green-100 shadow-sm h-[72px]">
       <div className="flex gap-6 items-center">
         <h1 className="text-xl font-bold text-green-600 w-[120px] h-[32px]">ShareRide</h1>
-        <StatusIndicator />
+        <StatusIndicator status={status} />
       </div>
       <div className="flex items-center">
       </div>

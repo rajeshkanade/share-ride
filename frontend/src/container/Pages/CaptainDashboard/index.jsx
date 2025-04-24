@@ -17,6 +17,7 @@ function CaptainDashboard() {
   const [openRequestPanel, setOpenRequestPanel] = useState(false)
   const {socket , sendMessage, receiveMessage} = useContext(SocketDataContext);
   const location = useLocation();
+  const [status,setStatus] = useState("offline");
   const rideEnd = location.state?.ride; // Retrieve ride data from state
   // const [ride, setRide] = useState(null);
 
@@ -65,7 +66,7 @@ function CaptainDashboard() {
   
    return (
     <main className="flex flex-col bg-gray-50 min-h-screen relative">
-      <CaptainHeader  captainName={captainData?.fullname?.firstname}/>
+      <CaptainHeader status={status}  captainName={captainData?.fullname?.firstname}/>
       <section className="flex flex-col gap-6 px-6 py-8 relative">
           <div onClick={()=>{setOpenRequestPanel(true)}}
           className="absolute left-0 cursor-pointer size-10 flex justify-center items-center rounded-r-lg bg-gray-300">
@@ -82,7 +83,7 @@ function CaptainDashboard() {
             <RideRequestCard captain={captainData}  ride={ride}/>
           </div> : ""
           }
-        <GoOnlineCard />
+        <GoOnlineCard status={status} setStatus={setStatus}  />
         <div className="flex gap-6 max-md:flex-col">
           <RecentTripsSection />
           <WeeklySummarySection />

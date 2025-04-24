@@ -80,7 +80,8 @@ function RideStartDetails({ ride }) {
           <DriverCard driver={driver} />
           <TripRouteCard trip={trip} />
           <TripSummaryCard trip={trip} />
-          <PaymentMethodCard
+          <PaymentMethodCard 
+            rideId={ride._id}
             selectedPayment={selectedPayment}
             setSelectedPayment={setSelectedPayment}
             paymentOptions={paymentOptions}

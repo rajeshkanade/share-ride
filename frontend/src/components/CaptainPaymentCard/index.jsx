@@ -1,9 +1,41 @@
 "use client";
-import React, { useState } from "react";
-import axios from "axios"
+import React, { useState, useEffect, useContext } from "react";
+import { SocketDataContext } from "../../context/SocketContext";
+import { toast } from "react-toastify";
 
-function CaptainPaymentCard({ paymentStatus , handleSubmit}) {
+function CaptainPaymentCard({ paymentStatus , setPaymentStatus, handleSubmit, rideId }) {
   const [status, setStatus] = useState(paymentStatus);
+  const { receiveMessageFromRoom, joinRoom } = useContext(SocketDataContext);
+  console.log("Ride  id  from captain payment is : ", rideId)
+  useEffect(() => {
+    if (rideId) {
+      console.log(`Attempting to join room with rideId: ${rideId}`);
+      joinRoom(rideId);
+      console.log(`Captain joined room: ${rideId}`);
+    } else {
+      console.error("rideId is undefined in CaptainPaymentCard");
+    }
+  }, [rideId]);
+
+  useEffect(() => {
+    console.log("Setting up listener for payment-done event");
+    receiveMessageFromRoom("payment-done", (data) => {
+      console.log("Payment-done event received in CaptainPaymentCard:", data);
+      setStatus("completed");
+      setPaymentStatus("completed");
+      toast.success("Payment completed successfully", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    
+      console.log("Payment status updated to completed");
+    });
+  }, [receiveMessageFromRoom]);
 
   // Status configurations with appropriate colors and icons
   const statusConfigs = {
@@ -95,18 +127,9 @@ function CaptainPaymentCard({ paymentStatus , handleSubmit}) {
       activeClass: "bg-[#F3F4F6] border-[#6B7280] text-[#6B7280]",
     },
   ];
-  
+
   // Get current status configuration
   const currentStatus = statusConfigs[status] || statusConfigs.pending;
-
-  // Function to simulate status change (for demo purposes)
-  const changeStatus = (newStatus) => {
-    if (statusConfigs[newStatus]) {
-      setStatus(newStatus);
-    }
-  };
-
-  
 
   return (
     <article className="bg-white rounded-[12px] p-[24px] shadow-[0_2px_12px_rgba(0,0,0,0.08)]">
@@ -130,46 +153,42 @@ function CaptainPaymentCard({ paymentStatus , handleSubmit}) {
         </div>
       </div>
 
-      {/* Status change buttons for demonstration */}
-     
-
-
       {/* Transaction details section */}
-     {
-        status === "completed" && (
-            <div className="mt-6 pt-4 border-t border-[#E5E7EB]">
-            <h4 className="text-[14px] font-medium text-[#1A1A1A] mb-3">
-              Transaction Details
-            </h4>
-            <div className="flex flex-col gap-2">
-              <div className="flex justify-between">
-                <span className="text-[13px] text-[#666]">Transaction ID</span>
-                <span className="text-[13px] font-medium text-[#1A1A1A]">
-                  TXN-12345678
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-[13px] text-[#666]">Date</span>
-                <span className="text-[13px] font-medium text-[#1A1A1A]">
-                  {new Date().toLocaleDateString()}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-[13px] text-[#666]">Payment Method</span>
-                <span className="text-[13px] font-medium text-[#1A1A1A]">
-                  Credit Card
-                </span>
-              </div>
+      {status === "completed" && (
+        <div className="mt-6 pt-4 border-t border-[#E5E7EB]">
+          <h4 className="text-[14px] font-medium text-[#1A1A1A] mb-3">
+            Transaction Details
+          </h4>
+          <div className="flex flex-col gap-2">
+            <div className="flex justify-between">
+              <span className="text-[13px] text-[#666]">Transaction ID</span>
+              <span className="text-[13px] font-medium text-[#1A1A1A]">
+                TXN-12345678
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-[13px] text-[#666]">Date</span>
+              <span className="text-[13px] font-medium text-[#1A1A1A]">
+                {new Date().toLocaleDateString()}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-[13px] text-[#666]">Payment Method</span>
+              <span className="text-[13px] font-medium text-[#1A1A1A]">
+                Credit Card
+              </span>
             </div>
           </div>
-        ) 
-     }
- <div className="flex justify-center items-center w-full">
-            <button
-             className='flex justify-center items-center w-full py-2 border border-green-500 text-green-500 rounded-md hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500 mb-4'
-             onClick={handleSubmit}
-             >Ride Completed</button>
-          </div>
+        </div>
+      )}
+      <div className="flex justify-center items-center w-full">
+        <button
+          className="flex justify-center items-center w-full py-2 border border-green-500 text-green-500 rounded-md hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500 mb-4"
+          onClick={handleSubmit}
+        >
+          Ride Completed
+        </button>
+      </div>
     </article>
   );
 }

@@ -24,6 +24,8 @@ const RideBook = ({ setIsShow , showFeedbackModal}) => {
   const setLocalStorageData = () =>{
     let pickupLoc = localStorage.getItem("pickup");
     let dropLoc = localStorage.getItem("destination");
+    console.log("pickupLoc from ridebook: ",pickupLoc);
+    console.log("dropLoc from ridebook: ",dropLoc);
     if(pickupLoc && dropLoc){
       setPickup(pickupLoc);
       setDropout(dropLoc);
@@ -106,8 +108,10 @@ const RideBook = ({ setIsShow , showFeedbackModal}) => {
 
   useEffect(()=>{
     if(showFeedbackModal) 
+     {
       setPickup("")
       setDropout("")
+     }
       
   },[])
 

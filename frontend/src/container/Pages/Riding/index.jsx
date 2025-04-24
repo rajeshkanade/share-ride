@@ -1,5 +1,5 @@
 "use client";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import CaptainStatusBar from "../../../components/CaptainStatusBar";
 import RideRequestCard from "../../../components/RideRequestCard";
@@ -20,6 +20,12 @@ function Riding() {
   const getDistanceAndTime = () => {};
   const {socket} = useContext(SocketDataContext);
   const navigate = useNavigate();
+  const [isShared, setIsShared] = useState(false);
+
+  useEffect(() => {
+    const storedIsShared = localStorage.getItem("isShared") === "true";
+    setIsShared(storedIsShared);
+  }, []);
 
  useEffect(() => {
   socket.on("ride-ended", (data) => {
@@ -34,7 +40,7 @@ function Riding() {
   return (
     <main className="overflow-hidden  bg-white min-h-screen">
       <Navbar />
-      <RideStartDetails ride={ride} /> {/* Pass ride data to RideStartDetails */}
+      <RideStartDetails ride={ride} isShared={isShared} /> {/* Pass ride data to RideStartDetails */}
     </main>
   );
 }

@@ -95,7 +95,7 @@ function CaptainRideAssignment() {
               )
              }
             </div>
-            <div className=" w-[70%] p-5 h-[90vh]  max-md:ml-0 max-md:w-full">
+            <div className=" w-[70%] p-5 h-[90vh] z-0  max-md:ml-0 max-md:w-full">
               <MapView pickupLoc={pickupCoordinates} destinationLoc={destinationCoordinates} />
             </div>
           </div>

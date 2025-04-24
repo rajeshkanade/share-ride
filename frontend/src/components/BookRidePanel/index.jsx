@@ -40,7 +40,7 @@ const BookRidePanel = ({isBookRide,vehicleData , setIsLookingDriver , createRide
                     <h4>20 min</h4>
                    </div>
                    <div className='flex justify-center items-center flex-col'>
-                    <h4>Price Cash</h4>
+                    <h4>Max Price Cash</h4>
                     <h4>₹ {vehicleData.fare.car}</h4>
                 </div>
                 </div>

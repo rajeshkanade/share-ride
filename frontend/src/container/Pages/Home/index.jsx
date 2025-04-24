@@ -17,6 +17,7 @@ const Home = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [suggestions, setSuggestions] = useState([])
   const [activeInput, setActiveInput] = useState(null)
+  const [isShared, setIsShared] = useState(false)
   const openLocationRef = useRef(null)
   const navigate = useNavigate();
   console.log("isOpen : ",isOpen) ;
@@ -51,24 +52,24 @@ const Home = () => {
     }
   }, [dropout])
 
-  const openRidePage = () =>{
-    if(pickup && dropout){
+  const toggleCabType = (shared) => {
+    setIsShacred(shared);
+  };
+
+  const openRidePage = () => {
+    if (pickup && dropout) {
       localStorage.setItem("pickup", pickup);
-    localStorage.setItem("destination",dropout);
-    if(token){
-      navigate("/ride");
-    }else{
-      navigate("/login");
+      localStorage.setItem("destination", dropout);
+      localStorage.setItem("isShared", isShared);
+      if (token) {
+        navigate(isShared ? "/share-ride" : "/ride");
+      } else {
+        navigate("/login");
+      }
+    } else {
+      console.log("Please enter pickup and drop location");
     }
-    }
-    else{
-      console.log("Please enter pickup and drop location")
-    }
-
-  }
-  
-
-  // useEffect(()=>{},[suggestions])
+  };
 
   const handleSuggestionClick = (suggestion) => {
     if (activeInput === 'pickup') {
@@ -92,11 +93,17 @@ const Home = () => {
           </h1>
 
           <div className="flex space-x-4 mb-8">
-            <button className="flex items-center px-6 py-3 bg-green-500 text-white rounded-full text-lg font-semibold">
+            <button
+              className={`flex items-center px-6 py-3 ${!isShared ? 'bg-green-500' : 'bg-gray-300'} text-white rounded-full text-lg font-semibold`}
+              onClick={() => toggleCabType(false)}
+            >
               <span className="mr-2">🚕</span>
               Private Cab
             </button>
-            <button className="flex items-center px-6 py-3 bg-yellow-500 text-white rounded-full text-lg font-semibold">
+            <button
+              className={`flex items-center px-6 py-3 ${isShared ? 'bg-yellow-500' : 'bg-gray-300'} text-white rounded-full text-lg font-semibold`}
+              onClick={() => toggleCabType(true)}
+            >
               <span className="mr-2">🚗</span>
               Share Cab
             </button>
@@ -203,8 +210,8 @@ const Home = () => {
          
         </div> : ""
            }
-            <span className="w-4 h-4 bg-green-500 rounded-full mr-3"></span>
-            <span className="text-lg">Use current location</span>
+            {/* <span className="w-4 h-4 bg-green-500 rounded-full mr-3"></span>
+            <span className="text-lg">Use current location</span> */}
           </div>
 
           <button className="w-full flex items-center justify-center px-6 py-3 bg-green-500 text-white rounded-full text-lg font-semibold hover:bg-green-600" 

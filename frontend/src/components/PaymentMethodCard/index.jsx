@@ -1,9 +1,18 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { toast } from "react-toastify";
+import { SocketDataContext } from "../../context/SocketContext";
 
-function PaymentMethodCard({ selectedPayment, setSelectedPayment, paymentOptions }) {
+function PaymentMethodCard({ selectedPayment, setSelectedPayment, paymentOptions, rideId }) {
   const [paymentDone, setPaymentDone] = useState(false);
+  const { sendMessageToRoom, joinRoom } = useContext(SocketDataContext);
+
+  useEffect(() => {
+    if (rideId) {
+      joinRoom(rideId);
+      console.log(`User joined room: ${rideId}`);
+    }
+  }, [rideId]);
 
   // Payment method icons mapping
   const paymentIcons = {
@@ -44,6 +53,8 @@ function PaymentMethodCard({ selectedPayment, setSelectedPayment, paymentOptions
   const paymentSuccessful = () => {
     toast.success("Payment Successful!");
     setPaymentDone(true);
+    sendMessageToRoom(rideId, "payment-done", { rideId }); // Emit event to the room
+    console.log("Payment-done event emitted to room", rideId);
   };
 
   return (
@@ -58,7 +69,14 @@ function PaymentMethodCard({ selectedPayment, setSelectedPayment, paymentOptions
           </div>
         </div>
       ) : (
-       <div class="flex justify-center items-center w-full"><button class="flex justify-center items-center w-full py-2 border border-green-500 text-green-500 rounded-md hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-green-500 mb-4">Ride Completed</button></div>
+        <div className="flex gap-[12px] flex-wrap">
+          <button
+            className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-400 to-blue-500 text-white font-semibold rounded-lg shadow-md hover:from-blue-500 hover:to-green-400 focus:outline-none focus:ring-2 focus:ring-green-300 transition-all duration-300"
+            onClick={paymentSuccessful}
+          >
+            <span className="text-[14px] font-medium">Make Payment</span>
+          </button>
+        </div>
       )}
     </article>
   );
