@@ -27,11 +27,11 @@ const Signup = () => {
   const formSubmit = async(e) =>{
     e.preventDefault();
     if (!firstName || !lastName || !username || !password || !confirmPassword) {
-      toast.error('All fields are required.', { position: toast.POSITION.TOP_RIGHT });
+      toast.error('All fields are required.', { position: "top-right" });
       return;
     }
     if (password !== confirmPassword) {
-      toast.error('Passwords do not match.', { position: toast.POSITION.TOP_RIGHT });
+      toast.error('Passwords do not match.', { position: "top-right" });
       return;
     }
     const newUser = {
@@ -50,16 +50,16 @@ const Signup = () => {
         const data  = response.data ;
         setUser(data.user);
         localStorage.setItem("token",data.token);
-        toast.success('Registration successful!', { position: toast.POSITION.TOP_RIGHT });
-        navigate("/");
+        toast.success('Registration successful!', { position: "top-right" });
+        navigate("/home");
       }
     }catch(error){
       if (error.response && error.response.data.errors) {
         error.response.data.errors.forEach((err) => {
-          toast.error(err.msg, { position: toast.POSITION.TOP_RIGHT });
+          toast.error(err.msg, { position: "top-right" });
         });
       } else {
-        toast.error('Something went wrong. Please try again.', { position: toast.POSITION.TOP_RIGHT });
+        toast.error('Something went wrong. Please try again.', { position: "top-right" });
       }
     }
     setUsername("")

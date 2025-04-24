@@ -53,7 +53,7 @@ const Home = () => {
   }, [dropout])
 
   const toggleCabType = (shared) => {
-    setIsShacred(shared);
+    setIsShared(shared);
   };
 
   const openRidePage = () => {
