@@ -73,11 +73,11 @@ function Ride() {
 
  const getCoordinates = async (address) => {
    const key = import.meta.env.VITE_GOMAPS_API_KEY;
-   // console.log("address : ", address);
+   console.log("address : ", address);
    const url = `https://maps.gomaps.pro/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${key}`;
    try {
      const response = await axios.get(url);
-     // console.log("response data from getCoordinates: ", response.data);
+     console.log("response data from getCoordinates: ", response.data);
      if (response.data.status === "OK") {
        const location = response.data.results[0].geometry.location;
 
@@ -156,7 +156,7 @@ function Ride() {
       <Navbar />
       <div className="container mx-auto h-full min-h-screen px-4 py-8">
         <div className={`grid grid-cols-1 md:grid-cols-[3fr_3fr_4fr] sm:grid-cols-1 gap-8 h-full`}>
-          <RideBook setIsShow={ShowRide} setFare={getFareFun} showFeedbackModal={showFeedbackModal} />
+          <RideBook setIsShow={ShowRide} setFare={getFareFun} showFeedbackModal={showFeedbackModal} getCoordinates={getCoordinates} />
           <AvailableRides
             isShow={isShow}
             rideConfirmData={rideConfirmData}

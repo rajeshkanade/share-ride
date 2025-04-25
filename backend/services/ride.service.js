@@ -4,41 +4,48 @@ const { sendMessageToSocketId } = require("../socket");
 const crypto = require('crypto');
 
 const calculateFare = async (pickup, destination) => {
-    console.log("p and d : ", pickup, destination);
+    console.log("Pickup and Destination Coordinates: ", pickup, destination);
 
-    if (!pickup || !destination) {
-        throw new Error("Pickup and Destination are required");
+    if (!pickup || !destination ) {
+        throw new Error("Invalid pickup or destination coordinates");
     }
-    const distanceTime = await mapService.getDistanceTime(pickup, destination);
-    // console.log(distanceTime)
-    if (!distanceTime || !distanceTime.distance || !distanceTime.distance.value || !distanceTime.duration || !distanceTime.duration.value) {
-        throw new Error("Invalid distanceTime object");
+
+    try {
+        const distanceTime = await mapService.getDistanceTime(pickup, destination);
+
+        if (!distanceTime || !distanceTime.distance || !distanceTime.distance.value || !distanceTime.duration || !distanceTime.duration.value) {
+            throw new Error("Invalid distanceTime object");
+        }
+
+        const baseFare = {
+            auto: 20,
+            car: 50,
+            motorcycle: 15
+        };
+
+        const perKmRate = {
+            auto: 10,
+            car: 20,
+            motorcycle: 8
+        };
+
+        const perMinuteRate = {
+            auto: 1,
+            car: 2,
+            motorcycle: 0.5
+        };
+
+        const fare = {
+            auto: (baseFare.auto + ((distanceTime.distance.value / 1000) * perKmRate.auto) + ((distanceTime.duration.value / 60) * perMinuteRate.auto)).toFixed(2),
+            car: (baseFare.car + ((distanceTime.distance.value / 1000) * perKmRate.car) + ((distanceTime.duration.value / 60) * perMinuteRate.car)).toFixed(2),
+            motorcycle: (baseFare.motorcycle + ((distanceTime.distance.value / 1000) * perKmRate.motorcycle) + ((distanceTime.duration.value / 60) * perMinuteRate.motorcycle)).toFixed(2)
+        };
+
+        return fare;
+    } catch (err) {
+        console.error("Error in calculateFare: ", err.message);
+        throw new Error("Failed to calculate fare");
     }
-    const baseFare = {
-        auto: 20,
-        car: 50,
-        motorcycle: 15
-    };
-
-    const perKmRate = {
-        auto: 10,
-        car: 20,
-        motorcycle: 8
-    };
-
-    const perMinuteRate = {
-        auto: 1,
-        car: 2,
-        motorcycle: 0.5
-    };
-
-    const fare = {
-        auto: (baseFare.auto + ((distanceTime.distance.value / 1000) * perKmRate.auto) + ((distanceTime.duration.value / 60) * perMinuteRate.auto)).toFixed(2),
-        car: (baseFare.car + ((distanceTime.distance.value / 1000) * perKmRate.car) + ((distanceTime.duration.value / 60) * perMinuteRate.car)).toFixed(2),
-        motorcycle: (baseFare.motorcycle + ((distanceTime.distance.value / 1000) * perKmRate.motorcycle) + ((distanceTime.duration.value / 60) * perMinuteRate.motorcycle)).toFixed(2)
-    };
-
-    return fare;
 };
 
 const getOtp = (num) => {

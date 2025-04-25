@@ -40,20 +40,24 @@ module.exports.createRide = async(req,res,next) =>{
     }
 }
 
-module.exports.getFare = async(req,res) =>{
+module.exports.getFare = async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
     const { pickup, destination } = req.query;
-    // console.log("Pickup and Destination: ", pickup, destination);
+    console.log("Pickup and Destination: ", pickup, destination);
     try {
-        const fare = await rideService.calculateFare(pickup, destination);
+        const parsedPickup = JSON.parse(pickup);
+        const parsedDestination = JSON.parse(destination);
+
+        const fare = await rideService.calculateFare(parsedPickup, parsedDestination);
         return res.status(200).json(fare);
     } catch (err) {
-        return res.status(500).json({ message: err.message });
+        console.error("Error in getFare: ", err.message);
+        return res.status(500).json({ message: "Failed to calculate fare", error: err.message });
     }
-}
+};
 
 
 module.exports.confirmRide = async(req,res) =>{

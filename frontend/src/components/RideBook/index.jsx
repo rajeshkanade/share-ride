@@ -7,7 +7,8 @@ import debounce from 'lodash.debounce'
 import { UserDataContext } from '../../context/UserContext'
 
 
-const RideBook = ({ setIsShow , showFeedbackModal}) => {
+const RideBook = (props) => {
+  const { getCoordinates, showFeedbackModal, setIsShow } = props;
   const [pickup, setPickup] = useState('')
   const [dropout, setDropout] = useState('')
   const [isOpen, setIsOpen] = useState(false)
@@ -78,33 +79,41 @@ const RideBook = ({ setIsShow , showFeedbackModal}) => {
     setIsOpen(false)
    
   }
-  const setIsShowFun = async() =>{
-    console.log("pickup and dropout "  , pickup, dropout);
-    if(pickup && dropout){
-      try {
-        const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/get-fare`, {
-          params: { pickup: pickup, destination: dropout },
-          headers: {
-        Authorization: `bearer ${localStorage.getItem("token")}`
-          }
-        })
-        console.log(response.data)
-        let fare = response.data;
-        console.log("p & d & f : ", pickup, dropout , fare);
-        setVehicleData({
-          pickup : pickup,
-          destination : dropout,
-          fare : fare,
-        })
-      } catch (error) {
-        console.error("Error fetching fare:", error)
-        setError("Failed to fetch fare. Please try again.")
-      }
-      setIsShow(true)
-    }else{
-      setError("Please Fill the Field");
+  const setIsShowFun = async () => {
+    console.log("pickup and dropout ", pickup, dropout);
+    if (pickup && dropout) {
+        try {
+            // Fetch coordinates for pickup and dropout
+            const pickupCoordinates = await getCoordinates(pickup);
+            const dropoutCoordinates = await getCoordinates(dropout);
+
+            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/get-fare`, {
+                params: {
+                    pickup: JSON.stringify(pickup),
+                    destination: JSON.stringify(dropout),
+                },
+                headers: {
+                    Authorization: `bearer ${localStorage.getItem("token")}`,
+                },
+            });
+
+            console.log(response.data);
+            let fare = response.data;
+            console.log("p & d & f : ", pickup, dropout, fare);
+            setVehicleData({
+                pickup: pickup,
+                destination: dropout,
+                fare: fare,
+            });
+        } catch (error) {
+            console.error("Error fetching fare:", error);
+            setError("Failed to fetch fare. Please try again.");
+        }
+        setIsShow(true);
+    } else {
+        setError("Please Fill the Field");
     }
-  }
+};
 
   useEffect(()=>{
     if(showFeedbackModal) 
