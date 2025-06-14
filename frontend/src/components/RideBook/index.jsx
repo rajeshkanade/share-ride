@@ -130,6 +130,7 @@ const RideBook = (props) => {
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-2xl font-semibold mb-4">Book a Ride</h2>
 
+
           <div className="space-y-4 mb-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Pickup Location</label>
