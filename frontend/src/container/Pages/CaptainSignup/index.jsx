@@ -33,7 +33,7 @@ const CaptainSignup = () => {
       e.preventDefault();
 
       if (!firstName || !lastName || !username || !password || !confirmPassword || !vehicleColor || !vehicleType || !vehicleCapacity || !vehiclePlate || !vehicleModel) {
-        toast.error('Please fill out all fields.', { position: toast.POSITION.TOP_RIGHT });
+        toast.error('Please fill out all fields.', { position: "top-right" });
         return;
       }
 
@@ -59,16 +59,16 @@ const CaptainSignup = () => {
           const data = response.data;
           setCaptain(data.captain)
           localStorage.setItem("token",data.token);
-          toast.success('Registration successful!', { position: toast.POSITION.TOP_RIGHT });
+          toast.success('Registration successful!', { position: "top-right" });
           navigate("/captain-home");
         }
       } catch (error) {
         if (error.response && error.response.data.errors) {
           error.response.data.errors.forEach((err) => {
-            toast.error(err.msg, { position: toast.POSITION.TOP_RIGHT });
+            toast.error(err.msg, { position: "top-right" });
           });
         } else {
-          toast.error('Something went wrong. Please try again.', { position: toast.POSITION.TOP_RIGHT });
+          toast.error('Something went wrong. Please try again.', { position: "top-right" });
         }
       }
       setUsername("")
